@@ -30,8 +30,11 @@ class Shortcodes {
 		add_shortcode( 'arc_rooms', [ $this, 'render_rooms_grid' ] );
 		add_shortcode( 'arc_search', [ $this, 'render_search_bar' ] );
 		add_shortcode( 'arc_results', [ $this, 'render_search_results' ] );
-		add_shortcode( 'arc_room_booking', [ $this, 'render_single_room_booking' ] );
+		// add_shortcode( 'arc_room_booking', [ $this, 'render_single_room_booking' ] );
 		add_shortcode( 'arc_track', [ $this, 'render_track_booking' ] );
+		add_shortcode( 'arc_room_meta', [ $this, 'render_room_meta' ] );
+		add_shortcode( 'arc_room_amenities', [ $this, 'render_room_amenities' ] );
+		add_shortcode( 'arc_room_gallery', [ $this, 'render_room_gallery' ] );
 	}
 
 	/**
@@ -441,28 +444,11 @@ class Shortcodes {
 	/**
 	 * [arc_room_booking] Single Room Post Availability Box
 	 *
+	 * @param array $atts Shortcode attributes.
 	 * @return string HTML output.
 	 */
-	public function render_single_room_booking(): string {
-		global $post;
-		if ( ! $post || Room_Post_Type::POST_TYPE !== $post->post_type ) {
-			return '';
-		}
-
-		$room_type_id = (int) get_post_meta( $post->ID, '_arc_room_type_id', true );
-		$from_price   = (float) get_post_meta( $post->ID, '_arc_from_price', true );
-
-		ob_start();
-		?>
-		<div class="arc-single-booking-box">
-			<div class="arc-box-header">
-				<span class="arc-from"><?php esc_html_e( 'Starting from', 'arc-hotel-core' ); ?></span>
-				<h3><?php echo esc_html( Settings::format_price( $from_price ) ); ?> <span>/<?php esc_html_e( 'night', 'arc-hotel-core' ); ?></span></h3>
-			</div>
-			<?php echo $this->render_search_bar(); ?>
-		</div>
-		<?php
-		return ob_get_clean();
+	public function render_single_room_booking( array $atts = [] ): string {
+		return Room_Booking_Form::render( $atts );
 	}
 
 	/**
@@ -491,6 +477,139 @@ class Shortcodes {
 				</form>
 				<div id="arc-track-result" style="margin-top: 20px; display: none;"></div>
 			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Helper to resolve room post ID for shortcodes.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return int Post ID.
+	 */
+	protected function resolve_room_post_id( array $atts = [] ): int {
+		$post_id = ! empty( $atts['room_id'] ) ? absint( $atts['room_id'] ) : (int) get_the_ID();
+		if ( ! $post_id || Room_Post_Type::POST_TYPE !== get_post_type( $post_id ) ) {
+			// Fallback for Elementor Theme Builder preview
+			$fallback = get_posts( [
+				'post_type'      => Room_Post_Type::POST_TYPE,
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+			] );
+			$post_id = $fallback ? (int) $fallback[0] : 0;
+		}
+		return $post_id;
+	}
+
+	/**
+	 * [arc_room_meta] Room specifications and pills (Adults, Children, Floor, Starting price).
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_room_meta( array $atts = [] ): string {
+		$atts    = shortcode_atts( [ 'room_id' => 0 ], $atts, 'arc_room_meta' );
+		$post_id = $this->resolve_room_post_id( $atts );
+		if ( ! $post_id ) {
+			return '';
+		}
+
+		$from_price = (float) get_post_meta( $post_id, '_arc_from_price', true );
+		$adults     = (int) get_post_meta( $post_id, '_arc_max_adults', true );
+		$children   = (int) get_post_meta( $post_id, '_arc_max_children', true );
+		$floor_name = get_post_meta( $post_id, '_arc_floor_name', true );
+		$terms      = get_the_terms( $post_id, Room_Post_Type::TAXONOMY );
+		$cat_name   = ! empty( $terms ) && ! is_wp_error( $terms ) ? $terms[0]->name : '';
+
+		ob_start();
+		?>
+		<div class="arc-room-meta-pills">
+			<?php if ( ! empty( $cat_name ) ) : ?>
+				<span class="arc-pill arc-pill-cat"><?php echo esc_html( $cat_name ); ?></span>
+			<?php endif; ?>
+			<span class="arc-pill">&#128100; <?php echo esc_html( $adults ?: 2 ); ?> <?php esc_html_e( 'Adults', 'arc-hotel-core' ); ?></span>
+			<?php if ( $children > 0 ) : ?>
+				<span class="arc-pill">&#128102; <?php echo esc_html( $children ); ?> <?php esc_html_e( 'Children', 'arc-hotel-core' ); ?></span>
+			<?php endif; ?>
+			<?php if ( ! empty( $floor_name ) ) : ?>
+				<span class="arc-pill">&#127970; <?php echo esc_html( $floor_name ); ?></span>
+			<?php endif; ?>
+			<?php if ( $from_price > 0 ) : ?>
+				<span class="arc-pill arc-pill-price"><?php esc_html_e( 'From', 'arc-hotel-core' ); ?> <strong><?php echo esc_html( Settings::format_price( $from_price ) ); ?></strong> /<?php esc_html_e( 'night', 'arc-hotel-core' ); ?></span>
+			<?php endif; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * [arc_room_amenities] Dynamic amenities list from API.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_room_amenities( array $atts = [] ): string {
+		$atts    = shortcode_atts( [ 'room_id' => 0 ], $atts, 'arc_room_amenities' );
+		$post_id = $this->resolve_room_post_id( $atts );
+		if ( ! $post_id ) {
+			return '';
+		}
+
+		$amenities = get_post_meta( $post_id, '_arc_amenities', true );
+		if ( ! is_array( $amenities ) && ! empty( $amenities ) ) {
+			$amenities = maybe_unserialize( $amenities );
+		}
+		$amenities = is_array( $amenities ) ? array_filter( $amenities ) : [];
+
+		if ( empty( $amenities ) ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<div class="arc-room-amenities-section">
+			<ul class="arc-amenities-grid">
+				<?php foreach ( $amenities as $am ) : ?>
+					<li>&#10004; <?php echo esc_html( $am ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * [arc_room_gallery] Dynamic room gallery thumbnails from API.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_room_gallery( array $atts = [] ): string {
+		$atts    = shortcode_atts( [ 'room_id' => 0 ], $atts, 'arc_room_gallery' );
+		$post_id = $this->resolve_room_post_id( $atts );
+		if ( ! $post_id ) {
+			return '';
+		}
+
+		$gallery = get_post_meta( $post_id, '_arc_image_urls', true );
+		if ( ! is_array( $gallery ) && ! empty( $gallery ) ) {
+			$gallery = maybe_unserialize( $gallery );
+		}
+		$gallery = is_array( $gallery ) ? array_filter( $gallery ) : [];
+
+		if ( empty( $gallery ) ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<div class="arc-gallery-thumbnails">
+			<?php foreach ( $gallery as $img_url ) : ?>
+				<a href="<?php echo esc_url( $img_url ); ?>" target="_blank" rel="noopener">
+					<img src="<?php echo esc_url( $img_url ); ?>" alt="<?php echo esc_attr( get_the_title( $post_id ) ); ?>" loading="lazy" />
+				</a>
+			<?php endforeach; ?>
 		</div>
 		<?php
 		return ob_get_clean();

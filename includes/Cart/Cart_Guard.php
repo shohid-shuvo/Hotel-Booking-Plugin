@@ -89,7 +89,8 @@ class Cart_Guard {
 			return;
 		}
 
-		$nonce_valid = isset( $_POST['arc_book_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['arc_book_nonce'] ) ), 'arc_add_room_to_cart' );
+		$nonce_raw   = isset( $_POST['arc_book_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['arc_book_nonce'] ) ) : ( isset( $_POST['arc_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['arc_nonce'] ) ) : '' );
+		$nonce_valid = self::verify_booking_nonce( $nonce_raw );
 
 		/*
 		 * No session-based bypass is allowed here.
@@ -364,5 +365,36 @@ class Cart_Guard {
 		];
 
 		return $item_data;
+	}
+
+	/**
+	 * Verify booking nonce across logged-in and guest (cached/REST) contexts.
+	 *
+	 * Supports both action names ('arc_book_room' and 'arc_add_room_to_cart')
+	 * and validates against both current user and guest UID 0.
+	 *
+	 * @param string $nonce Nonce string.
+	 * @return bool
+	 */
+	public static function verify_booking_nonce( string $nonce ): bool {
+		if ( empty( $nonce ) ) {
+			return false;
+		}
+
+		if ( wp_verify_nonce( $nonce, 'arc_add_room_to_cart' ) || wp_verify_nonce( $nonce, 'arc_book_room' ) ) {
+			return true;
+		}
+
+		if ( is_user_logged_in() ) {
+			$current_uid = get_current_user_id();
+			wp_set_current_user( 0 );
+			$guest_valid = wp_verify_nonce( $nonce, 'arc_add_room_to_cart' ) || wp_verify_nonce( $nonce, 'arc_book_room' );
+			wp_set_current_user( $current_uid );
+			if ( $guest_valid ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

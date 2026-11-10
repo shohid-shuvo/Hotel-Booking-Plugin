@@ -41,7 +41,7 @@ class Order_Meta_Box {
 
 		add_meta_box(
 			'arc_hotel_booking_meta',
-			__( 'ASP.NET Hotel Reservation Details', 'arc-hotel-core' ),
+			__( 'Hotel Reservation Details', 'arc-hotel-core' ),
 			[ $this, 'render' ],
 			$screen,
 			'side',
@@ -93,7 +93,7 @@ class Order_Meta_Box {
 						<td><strong><?php echo esc_html( $booking_no ?: 'Pending Sync' ); ?></strong></td>
 					</tr>
 					<tr>
-						<td><strong><?php esc_html_e( 'API Booking ID:', 'arc-hotel-core' ); ?></strong></td>
+						<td><strong><?php esc_html_e( 'Reservation ID:', 'arc-hotel-core' ); ?></strong></td>
 						<td><code><?php echo esc_html( $booking_id ?: 'N/A' ); ?></code></td>
 					</tr>
 					<tr>
@@ -135,7 +135,7 @@ class Order_Meta_Box {
 			<?php if ( 'synced' !== $sync_status ) : ?>
 				<div style="margin-top: 15px;">
 					<button type="button" id="arc-retry-sync-btn" class="button button-primary" style="width: 100%;" onclick="arcRetrySync(<?php echo esc_attr( $order_id ); ?>);">
-						<?php esc_html_e( 'Retry API Sync Now', 'arc-hotel-core' ); ?>
+						<?php esc_html_e( 'Retry Sync Now', 'arc-hotel-core' ); ?>
 					</button>
 				</div>
 			<?php endif; ?>
@@ -156,7 +156,7 @@ class Order_Meta_Box {
 
 		function arcRetrySync(orderId) {
 			var btn = jQuery('#arc-retry-sync-btn');
-			btn.prop('disabled', true).text('<?php echo esc_js( __( 'Syncing with API...', 'arc-hotel-core' ) ); ?>');
+			btn.prop('disabled', true).text('<?php echo esc_js( __( 'Synchronizing reservation...', 'arc-hotel-core' ) ); ?>');
 
 			jQuery.post(ajaxurl, {
 				action: 'arc_manual_retry_sync',
@@ -168,7 +168,7 @@ class Order_Meta_Box {
 					location.reload();
 				} else {
 					alert(response.data ? response.data.message : '<?php echo esc_js( __( 'Sync failed.', 'arc-hotel-core' ) ); ?>');
-					btn.prop('disabled', false).text('<?php echo esc_js( __( 'Retry API Sync Now', 'arc-hotel-core' ) ); ?>');
+					btn.prop('disabled', false).text('<?php echo esc_js( __( 'Retry Sync Now', 'arc-hotel-core' ) ); ?>');
 				}
 			});
 		}

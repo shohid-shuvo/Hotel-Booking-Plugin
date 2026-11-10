@@ -38,6 +38,10 @@ class Checkout_Fields {
 	 * @return array
 	 */
 	public function filter_checkout_fields( array $fields ): array {
+		if ( function_exists( 'arc_cfg' ) ) {
+			return $fields;
+		}
+
 		if ( Cart_Guard::cart_has_room() ) {
 			// Room Checkout Mode: Remove physical shipping and unnecessary billing address fields
 			$remove_keys = [
@@ -76,7 +80,7 @@ class Checkout_Fields {
 	 * @return void
 	 */
 	public function enqueue_checkout_assets(): void {
-		if ( ! is_checkout() || is_order_received_page() ) {
+		if ( ! is_checkout() || is_order_received_page() || function_exists( 'arc_cfg' ) ) {
 			return;
 		}
 
@@ -104,7 +108,7 @@ class Checkout_Fields {
 	 * @return void
 	 */
 	public function render_review_booking_card(): void {
-		if ( ! Cart_Guard::cart_has_room() ) {
+		if ( ! Cart_Guard::cart_has_room() || function_exists( 'arc_cfg' ) ) {
 			return;
 		}
 
@@ -129,12 +133,16 @@ class Checkout_Fields {
 	/**
 	 * Render additional hotel fields (NID, additional guests, bed preference, arrival time).
 	 *
-	 * @param \WC_Checkout $checkout Checkout object.
+	 * @param \WC_Checkout|null $checkout Checkout object.
 	 * @return void
 	 */
-	public function render_hotel_specific_fields( $checkout ): void {
-		if ( ! Cart_Guard::cart_has_room() ) {
+	public function render_hotel_specific_fields( $checkout = null ): void {
+		if ( ! Cart_Guard::cart_has_room() || function_exists( 'arc_cfg' ) ) {
 			return;
+		}
+
+		if ( ! ( $checkout instanceof \WC_Checkout ) ) {
+			$checkout = function_exists( 'WC' ) && WC()->checkout() ? WC()->checkout() : null;
 		}
 
 		$room_item = null;
@@ -146,6 +154,7 @@ class Checkout_Fields {
 		}
 
 		$adults = $room_item['adults'] ?? 1;
+		$id_val = $checkout ? $checkout->get_value( 'arc_id_number' ) : '';
 		?>
 		<div class="arc-hotel-checkout-section" style="margin-top: 25px; padding: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;">
 			<h3 style="margin-top: 0; color: #1e293b;"><?php esc_html_e( 'Guest Details & Identification', 'arc-hotel-core' ); ?></h3>
@@ -155,7 +164,7 @@ class Checkout_Fields {
 					<?php esc_html_e( 'National ID (NID) or Passport Number', 'arc-hotel-core' ); ?> <abbr class="required" title="required">*</abbr>
 				</label>
 				<span class="woocommerce-input-wrapper">
-					<input type="text" class="input-text" name="arc_id_number" id="arc_id_number" placeholder="<?php esc_attr_e( 'e.g. 10/13/17-digit NID or Passport number', 'arc-hotel-core' ); ?>" value="<?php echo esc_attr( $checkout->get_value( 'arc_id_number' ) ); ?>" required />
+					<input type="text" class="input-text" name="arc_id_number" id="arc_id_number" placeholder="<?php esc_attr_e( 'e.g. 10/13/17-digit NID or Passport number', 'arc-hotel-core' ); ?>" value="<?php echo esc_attr( $id_val ); ?>" required />
 				</span>
 				<small style="color: #64748b;"><?php esc_html_e( 'Required by Bangladesh hotel regulations for check-in verification.', 'arc-hotel-core' ); ?></small>
 			</p>
@@ -235,12 +244,15 @@ class Checkout_Fields {
 		}
 
 		$order->update_meta_data( '_arc_order_type', 'room' );
+		$order->update_meta_data( '_arc_sync_status', 'pending' );
 
 		// Save booking cart specifications
-		foreach ( WC()->cart->get_cart() as $item ) {
-			if ( ! empty( $item['arc_room'] ) ) {
-				$order->update_meta_data( '_arc_booking', $item['arc_room'] );
-				break;
+		if ( ! $order->get_meta( '_arc_booking' ) ) {
+			foreach ( WC()->cart->get_cart() as $item ) {
+				if ( ! empty( $item['arc_room'] ) ) {
+					$order->update_meta_data( '_arc_booking', $item['arc_room'] );
+					break;
+				}
 			}
 		}
 

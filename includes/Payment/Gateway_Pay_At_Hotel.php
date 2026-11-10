@@ -82,7 +82,7 @@ class Gateway_Pay_At_Hotel extends \WC_Payment_Gateway {
 		}
 
 		// Mark order on-hold
-		$order->update_status( 'on-hold', __( 'Guest selected Pay at Hotel. Reservation queued for ASP.NET API sync.', 'arc-hotel-core' ) );
+		$order->update_status( 'on-hold', __( 'Guest selected Pay at Hotel. Reservation queued for hotel system synchronization.', 'arc-hotel-core' ) );
 
 		// Empty cart
 		if ( function_exists( 'WC' ) && WC()->cart ) {

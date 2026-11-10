@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Diagnostic logger for API requests.
+ * Diagnostic logger for API requests with strict data masking and endpoint obfuscation.
  */
 class Api_Logger {
 
@@ -32,7 +32,7 @@ class Api_Logger {
 	}
 
 	/**
-	 * Create database table for API logs.
+	 * Create database table for API logs and migrate legacy records.
 	 *
 	 * @return void
 	 */
@@ -62,12 +62,107 @@ class Api_Logger {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+
+		self::migrate_legacy_logs();
 	}
 
 	/**
-	 * Record an API transaction.
+	 * Migrate existing legacy raw endpoints in DB to safe obfuscated slugs.
 	 *
-	 * @param string      $endpoint       Called API endpoint.
+	 * @return void
+	 */
+	public static function migrate_legacy_logs(): void {
+		global $wpdb;
+		$table_name = self::get_table_name();
+
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+		if ( ! $table_exists ) {
+			return;
+		}
+
+		// Obfuscate raw API routes in existing rows to safe slugs
+		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'hotel_profile_sync' WHERE endpoint LIKE '%hotel-info%'" );
+		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'room_catalog_sync' WHERE endpoint LIKE '%room-categories%'" );
+		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'availability_check' WHERE endpoint LIKE '%available-rooms%'" );
+		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'reservation_create' WHERE endpoint LIKE '%create-reservation%'" );
+		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'reservation_cancel' WHERE endpoint LIKE '%cancel-reservation%'" );
+		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'reservation_track' WHERE endpoint LIKE '%track%'" );
+
+		// Clear payloads for succeeded rows to protect internal schema
+		$is_debug = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'ARC_DEV_MODE' ) && ARC_DEV_MODE );
+		if ( ! $is_debug ) {
+			$wpdb->query( "UPDATE {$table_name} SET request_payload = NULL, response_payload = NULL WHERE succeeded = 1" );
+		}
+	}
+
+	/**
+	 * Map endpoint or operation slug to client-safe friendly operation title.
+	 *
+	 * @param string $endpoint Raw endpoint or slug.
+	 * @return string Friendly operation name.
+	 */
+	public static function get_operation_name( string $endpoint ): string {
+		$clean = trim( strtolower( $endpoint ), '/' );
+
+		if ( str_contains( $clean, 'hotel-info' ) || 'hotel_profile_sync' === $clean ) {
+			return __( 'Hotel Profile Sync', 'arc-hotel-core' );
+		}
+		if ( str_contains( $clean, 'room-categories' ) || 'room_catalog_sync' === $clean ) {
+			return __( 'Room Catalog Sync', 'arc-hotel-core' );
+		}
+		if ( str_contains( $clean, 'available-rooms' ) || 'availability_check' === $clean ) {
+			return __( 'Availability Check', 'arc-hotel-core' );
+		}
+		if ( str_contains( $clean, 'create-reservation' ) || 'reservation_create' === $clean ) {
+			return __( 'Reservation Booking', 'arc-hotel-core' );
+		}
+		if ( str_contains( $clean, 'cancel-reservation' ) || 'reservation_cancel' === $clean ) {
+			return __( 'Reservation Cancellation', 'arc-hotel-core' );
+		}
+		if ( str_contains( $clean, 'track' ) || 'reservation_track' === $clean ) {
+			return __( 'Reservation Tracking', 'arc-hotel-core' );
+		}
+
+		return __( 'System Cloud Sync', 'arc-hotel-core' );
+	}
+
+	/**
+	 * Obfuscate raw API route into a sanitized internal slug.
+	 *
+	 * Never persists proprietary REST URL routes to the database.
+	 *
+	 * @param string $endpoint Raw endpoint path.
+	 * @return string Safe slug.
+	 */
+	public static function get_operation_slug( string $endpoint ): string {
+		$clean = trim( strtolower( $endpoint ), '/' );
+
+		if ( str_contains( $clean, 'hotel-info' ) ) {
+			return 'hotel_profile_sync';
+		}
+		if ( str_contains( $clean, 'room-categories' ) ) {
+			return 'room_catalog_sync';
+		}
+		if ( str_contains( $clean, 'available-rooms' ) ) {
+			return 'availability_check';
+		}
+		if ( str_contains( $clean, 'create-reservation' ) ) {
+			return 'reservation_create';
+		}
+		if ( str_contains( $clean, 'cancel-reservation' ) ) {
+			return 'reservation_cancel';
+		}
+		if ( str_contains( $clean, 'track' ) ) {
+			return 'reservation_track';
+		}
+
+		return 'system_cloud_sync';
+	}
+
+	/**
+	 * Record a synchronization transaction.
+	 *
+	 * @param string      $endpoint       Called API endpoint or slug.
 	 * @param string      $method         HTTP method (GET, POST, etc.).
 	 * @param int         $http_status    Returned HTTP status code.
 	 * @param int         $duration_ms    Call duration in milliseconds.
@@ -99,14 +194,17 @@ class Api_Logger {
 			self::install_table();
 		}
 
-		$redacted_request  = self::redact( $request );
-		$redacted_response = self::redact( $response );
+		$is_debug       = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'ARC_DEV_MODE' ) && ARC_DEV_MODE );
+		$store_payloads = $is_debug || ! $succeeded;
+
+		$redacted_request  = $store_payloads ? self::redact( $request ) : null;
+		$redacted_response = $store_payloads ? self::redact( $response ) : null;
 
 		$wpdb->insert(
 			$table_name,
 			[
 				'created_at'       => current_time( 'mysql', true ),
-				'endpoint'         => sanitize_text_field( $endpoint ),
+				'endpoint'         => self::get_operation_slug( $endpoint ),
 				'method'           => strtoupper( sanitize_text_field( $method ) ),
 				'http_status'      => (int) $http_status,
 				'duration_ms'      => (int) $duration_ms,
@@ -178,6 +276,10 @@ class Api_Logger {
 			'secret',
 			'api_key',
 			'apiKey',
+			'authorization',
+			'auth',
+			'x-api-key',
+			'cookie',
 			'credit_card',
 			'cardNumber',
 			'cvv',

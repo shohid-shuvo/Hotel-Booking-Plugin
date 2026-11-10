@@ -237,7 +237,7 @@ class Cache_Safety {
 	 */
 	public function rest_get_fresh_nonces(): \WP_REST_Response {
 		$data = [
-			'book_nonce'  => wp_create_nonce( 'arc_add_room_to_cart' ),
+			'book_nonce'  => wp_create_nonce( 'arc_book_room' ),
 			'track_nonce' => wp_create_nonce( 'arc_track_booking_action' ),
 		];
 
