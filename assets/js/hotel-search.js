@@ -13,10 +13,13 @@
 			return;
 		}
 
-		// Automatically refresh nonces on cached pages via no-store REST endpoint
-		if ($('input[name="arc_book_nonce"], input[name="arc_track_nonce"]').length) {
+		// Automatically refresh nonces on cached pages for guest users via no-store REST endpoint.
+		// Logged in users never get cached pages, so their server-rendered nonces are always 100% fresh.
+		var isLoggedIn = typeof arcSearchSettings !== 'undefined' && arcSearchSettings.isLoggedIn;
+		if (!isLoggedIn && $('input[name="arc_book_nonce"], input[name="arc_track_nonce"]').length) {
+			var restUrl = (typeof arcSearchSettings !== 'undefined' && arcSearchSettings.restUrl) ? arcSearchSettings.restUrl : '/wp-json/arc/v1/fresh-nonces';
 			$.ajax({
-				url: '/wp-json/arc/v1/fresh-nonces',
+				url: restUrl,
 				method: 'GET',
 				cache: false,
 				success: function(res) {

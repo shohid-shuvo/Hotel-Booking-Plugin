@@ -164,7 +164,7 @@ class Email_Manager {
 
 		$message = sprintf(
 			"Attention Hotel Management,\n\n" .
-			"An online hotel room booking in WooCommerce encountered a synchronization issue with the ASP.NET Smart Hotel API.\n\n" .
+			"An online hotel room booking in WooCommerce encountered a synchronization issue with the central Hotel Management System.\n\n" .
 			"Order ID: #%d\n" .
 			"Customer: %s\n" .
 			"Phone: %s\n" .

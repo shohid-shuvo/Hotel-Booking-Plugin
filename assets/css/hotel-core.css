@@ -312,3 +312,271 @@
 	border-radius: 6px;
 	font-size: 15px;
 }
+
+/* ==========================================================================
+   Single Room Page Layout & Components
+   ========================================================================== */
+
+/* Main Container: Top padding clears transparent/sticky theme headers */
+.arc-single-room-container {
+	max-width: 1240px;
+	margin: 0 auto;
+	padding: 110px 24px 60px;
+	box-sizing: border-box;
+}
+
+.arc-room-article {
+	margin-bottom: 40px;
+}
+
+/* Room Hero */
+.arc-room-hero {
+	margin-bottom: 25px;
+}
+
+.arc-single-room-container .arc-room-title {
+	font-size: 32px;
+	font-weight: 700;
+	color: #0f172a;
+	line-height: 1.25;
+	margin: 0 0 12px 0;
+}
+
+/* Single Room Meta Pills */
+.arc-room-meta-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: center;
+	margin: 12px 0 25px;
+}
+
+.arc-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 14px;
+	border-radius: 20px;
+	background: #f1f5f9;
+	color: #334155;
+	font-size: 13px;
+	font-weight: 500;
+	border: 1px solid #e2e8f0;
+}
+
+.arc-pill-cat {
+	background: #1e3a8a;
+	color: #ffffff;
+	border-color: #1e3a8a;
+	font-weight: 600;
+}
+
+.arc-pill-price {
+	background: #fef3c7;
+	color: #92400e;
+	border-color: #fde68a;
+}
+
+.arc-pill-price strong {
+	color: #b45309;
+	font-weight: 700;
+}
+
+/* Single Room Gallery: Constrains giant ERP images and prevents layout overflow */
+.arc-room-gallery-wrap {
+	margin-bottom: 35px;
+	background: #0f172a;
+	border-radius: 12px;
+	padding: 14px;
+	box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.arc-gallery-main {
+	width: 100%;
+	height: 480px;
+	overflow: hidden;
+	border-radius: 8px;
+	background: #1e293b;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.arc-gallery-main img {
+	width: 100% !important;
+	height: 100% !important;
+	max-height: 480px !important;
+	object-fit: cover !important;
+	display: block !important;
+	border-radius: 8px;
+	transition: opacity 0.3s ease;
+}
+
+.arc-gallery-thumbnails {
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
+	gap: 12px !important;
+	margin-top: 12px !important;
+	overflow-x: auto !important;
+	padding: 4px 2px 8px !important;
+	scrollbar-width: thin;
+}
+
+.arc-gallery-thumbnails::-webkit-scrollbar {
+	height: 6px;
+}
+
+.arc-gallery-thumbnails::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 3px;
+}
+
+.arc-gallery-thumbnails .arc-gallery-thumb,
+.arc-gallery-thumbnails img {
+	width: 110px !important;
+	max-width: 110px !important;
+	min-width: 110px !important;
+	height: 75px !important;
+	max-height: 75px !important;
+	object-fit: cover !important;
+	display: block !important;
+	border-radius: 6px;
+	cursor: pointer;
+	flex-shrink: 0 !important;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	transition: all 0.2s ease;
+}
+
+.arc-gallery-thumbnails .arc-gallery-thumb:hover,
+.arc-gallery-thumbnails .arc-gallery-thumb.active,
+.arc-gallery-thumbnails img:hover,
+.arc-gallery-thumbnails img.active {
+	border-color: #38bdf8;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
+}
+
+/* 2-Column Content Grid: Main Overview (Left) + Sticky Booking Widget (Right) */
+.arc-room-content-grid {
+	display: flex;
+	gap: 40px;
+	align-items: flex-start;
+	margin-top: 35px;
+}
+
+.arc-room-main-info {
+	flex: 1 1 65%;
+	min-width: 0;
+}
+
+.arc-room-main-info h2 {
+	font-size: 24px;
+	font-weight: 700;
+	color: #0f172a;
+	margin: 0 0 16px 0;
+	padding-bottom: 12px;
+	border-bottom: 2px solid #f1f5f9;
+}
+
+.arc-room-main-info .entry-content {
+	font-size: 15px;
+	line-height: 1.7;
+	color: #475569;
+}
+
+.arc-room-sidebar-booking {
+	flex: 1 1 35%;
+	min-width: 320px;
+	position: sticky;
+	top: 110px;
+	z-index: 20;
+}
+
+/* Single Room Amenities */
+.arc-room-amenities-section {
+	margin-top: 35px;
+	padding-top: 25px;
+	border-top: 1px solid #e2e8f0;
+}
+
+.arc-room-amenities-section h3 {
+	font-size: 20px;
+	font-weight: 600;
+	color: #0f172a;
+	margin: 0 0 16px 0;
+}
+
+.arc-amenities-list,
+.arc-amenities-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 12px;
+	list-style: none;
+	padding: 0;
+	margin: 15px 0 0;
+}
+
+.arc-amenities-list li,
+.arc-amenities-grid li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	color: #334155;
+	background: #f8fafc;
+	padding: 10px 14px;
+	border-radius: 6px;
+	border: 1px solid #f1f5f9;
+}
+
+/* Mobile & Tablet Responsiveness */
+@media (max-width: 960px) {
+	.arc-room-content-grid {
+		flex-direction: column;
+		gap: 30px;
+	}
+
+	.arc-room-main-info,
+	.arc-room-sidebar-booking {
+		flex: 1 1 100%;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.arc-room-sidebar-booking {
+		position: static;
+	}
+
+	.arc-gallery-main {
+		height: 340px;
+	}
+
+	.arc-single-room-container {
+		padding-top: 90px;
+	}
+}
+
+@media (max-width: 600px) {
+	.arc-single-room-container {
+		padding: 80px 15px 40px;
+	}
+
+	.arc-single-room-container .arc-room-title {
+		font-size: 24px;
+	}
+
+	.arc-gallery-main {
+		height: 240px;
+	}
+
+	.arc-gallery-thumbnails .arc-gallery-thumb,
+	.arc-gallery-thumbnails img {
+		width: 80px !important;
+		min-width: 80px !important;
+		max-width: 80px !important;
+		height: 55px !important;
+		max-height: 55px !important;
+	}
+}
+

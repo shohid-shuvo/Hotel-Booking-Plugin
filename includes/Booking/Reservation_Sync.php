@@ -148,7 +148,7 @@ class Reservation_Sync {
 				$order->add_order_note(
 					sprintf(
 						/* translators: 1: Booking number, 2: Room number */
-						__( 'ASP.NET Hotel Reservation created successfully. Official Booking No: %1$s, Room: %2$s', 'arc-hotel-core' ),
+						__( 'Hotel Reservation confirmed successfully. Official Booking No: %1$s, Room: %2$s', 'arc-hotel-core' ),
 						$data['bookingNumber'] ?? 'N/A',
 						$data['roomNumber'] ?? 'Auto-Assigned'
 					)
@@ -169,7 +169,7 @@ class Reservation_Sync {
 			// Business errors (room taken, price mismatch) require immediate admin review
 			if ( in_array( $error_code, [ 'ROOM_NOT_AVAILABLE', 'PRICE_CHANGED', 'HOLD_EXPIRED' ], true ) ) {
 				$order->update_meta_data( '_arc_sync_status', 'manual' );
-				$order->update_status( 'on-hold', sprintf( __( 'API Sync Conflict: %s. Requires manual room assignment or customer contact.', 'arc-hotel-core' ), $error_msg ) );
+				$order->update_status( 'on-hold', sprintf( __( 'Sync Conflict: %s. Requires manual room assignment or customer contact.', 'arc-hotel-core' ), $error_msg ) );
 				\ARC\HotelCore\Emails\Email_Manager::send_admin_sync_failed_alert( $order_id, $error_msg, $error_code );
 				delete_option( $lock_key );
 				return false;
@@ -185,7 +185,7 @@ class Reservation_Sync {
 				$order->add_order_note(
 					sprintf(
 						/* translators: 1: Attempt number, 2: Error message, 3: Minutes to next retry */
-						__( 'API Sync Attempt #%1$d failed (%2$s). Next retry scheduled in %3$d minutes.', 'arc-hotel-core' ),
+						__( 'Sync Attempt #%1$d failed (%2$s). Next retry scheduled in %3$d minutes.', 'arc-hotel-core' ),
 						$attempts,
 						$error_msg,
 						round( $retry_intervals[ $attempts ] / 60 )
@@ -193,7 +193,7 @@ class Reservation_Sync {
 				);
 			} else {
 				$order->update_meta_data( '_arc_sync_status', 'failed' );
-				$order->update_status( 'on-hold', __( 'Final API sync retry failed. Admin manual intervention required.', 'arc-hotel-core' ) );
+				$order->update_status( 'on-hold', __( 'Final sync retry failed. Admin manual intervention required.', 'arc-hotel-core' ) );
 				\ARC\HotelCore\Emails\Email_Manager::send_admin_sync_failed_alert( $order_id, $error_msg, 'FINAL_RETRY_FAILED' );
 			}
 

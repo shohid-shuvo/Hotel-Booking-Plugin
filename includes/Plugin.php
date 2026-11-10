@@ -21,6 +21,7 @@ use ARC\HotelCore\Admin\Orders_Columns;
 use ARC\HotelCore\Track\Track_Controller;
 use ARC\HotelCore\Elementor\Shortcodes;
 use ARC\HotelCore\Elementor\Elementor_Init;
+use ARC\HotelCore\Elementor\Room_Booking_Form;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -108,7 +109,9 @@ class Plugin {
 			'arc-hotel-search-js',
 			'arcSearchSettings',
 			[
-				'maxStay' => \ARC\HotelCore\Settings\Settings::get( 'max_stay_nights', 30 ),
+				'maxStay'    => \ARC\HotelCore\Settings\Settings::get( 'max_stay_nights', 30 ),
+				'isLoggedIn' => is_user_logged_in(),
+				'restUrl'    => esc_url_raw( rest_url( 'arc/v1/fresh-nonces' ) ),
 			]
 		);
 	}
@@ -125,6 +128,7 @@ class Plugin {
 
 		// Shortcodes & Elementor
 		( new Shortcodes() )->init();
+		Room_Booking_Form::init();
 		if ( did_action( 'elementor/loaded' ) || class_exists( '\Elementor\Plugin' ) ) {
 			( new Elementor_Init() )->init();
 		}

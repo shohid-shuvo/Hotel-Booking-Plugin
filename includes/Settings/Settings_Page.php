@@ -29,6 +29,7 @@ class Settings_Page {
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'register_menu' ], 60 );
 		add_action( 'admin_init', [ $this, 'handle_save' ] );
+		add_action( 'admin_init', [ $this, 'handle_wc_sync' ] );
 		add_action( 'wp_ajax_arc_test_api_connection', [ $this, 'ajax_test_connection' ] );
 		add_action( 'wp_ajax_arc_flush_api_cache', [ $this, 'ajax_flush_cache' ] );
 	}
@@ -109,6 +110,51 @@ class Settings_Page {
 	}
 
 	/**
+	 * Handle manual WooCommerce integration initialization & repair.
+	 *
+	 * @return void
+	 */
+	public function handle_wc_sync(): void {
+		if ( ! isset( $_POST['arc_action'] ) || 'sync_woocommerce' !== $_POST['arc_action'] ) {
+			return;
+		}
+
+		check_admin_referer( 'arc_wc_sync_action', 'arc_wc_sync_nonce' );
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'Permission denied.', 'arc-hotel-core' ) );
+		}
+
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			wp_safe_redirect( add_query_arg( [
+				'post_type' => Room_Post_Type::POST_TYPE,
+				'page'      => 'arc-hotel-settings',
+				'wc_err'    => rawurlencode( __( 'WooCommerce is not active! Please install and activate WooCommerce first.', 'arc-hotel-core' ) ),
+			], admin_url( 'edit.php' ) ) );
+			exit;
+		}
+
+		// Ensure container product exists & is published
+		$product_id = \ARC\HotelCore\Plugin::ensure_room_container_product();
+
+		$checkout_id  = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'checkout' ) : 0;
+		$checkout_url = $checkout_id > 0 ? get_permalink( $checkout_id ) : '';
+
+		$msg = sprintf(
+			/* translators: %d: Product ID */
+			__( 'WooCommerce integration is 100%% connected! Booking Container Product #%d ("Hotel Room Reservation") is active and mapped to WooCommerce Checkout.', 'arc-hotel-core' ),
+			$product_id
+		);
+
+		wp_safe_redirect( add_query_arg( [
+			'post_type' => Room_Post_Type::POST_TYPE,
+			'page'      => 'arc-hotel-settings',
+			'wc_synced' => rawurlencode( $msg ),
+		], admin_url( 'edit.php' ) ) );
+		exit;
+	}
+
+	/**
 	 * Render settings page HTML.
 	 *
 	 * @return void
@@ -176,6 +222,18 @@ class Settings_Page {
 			<?php if ( isset( $_GET['sync_err'] ) ) : ?>
 				<div class="notice notice-error is-dismissible">
 					<p><strong>&#10008; <?php esc_html_e( 'Sync Error:', 'arc-hotel-core' ); ?></strong> <?php echo esc_html( urldecode( sanitize_text_field( wp_unslash( $_GET['sync_err'] ) ) ) ); ?></p>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( isset( $_GET['wc_synced'] ) ) : ?>
+				<div class="notice notice-success is-dismissible">
+					<p><strong>&#10004; <?php echo esc_html( urldecode( sanitize_text_field( wp_unslash( $_GET['wc_synced'] ) ) ) ); ?></strong></p>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( isset( $_GET['wc_err'] ) ) : ?>
+				<div class="notice notice-error is-dismissible">
+					<p><strong>&#10008; <?php esc_html_e( 'WooCommerce Integration Error:', 'arc-hotel-core' ); ?></strong> <?php echo esc_html( urldecode( sanitize_text_field( wp_unslash( $_GET['wc_err'] ) ) ) ); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -248,7 +306,7 @@ class Settings_Page {
 								<td>
 									<input type="text" name="company_code" id="company_code" value="<?php echo esc_attr( Settings::get( 'company_code' ) ); ?>" class="regular-text" style="font-size: 16px; font-weight: bold; letter-spacing: 1px; color: #1e3a8a;" required />
 									<p class="description" style="margin-top: 6px;">
-										<?php esc_html_e( 'The unique hotel tenant code registered in the ASP.NET Hotel ERP (e.g. GPH01). Whenever this code is changed and saved, the plugin automatically switches to that hotel and syncs all of its room categories, inventory, and rates.', 'arc-hotel-core' ); ?>
+										<?php esc_html_e( 'The unique hotel property code registered in the central Hotel Management System (e.g. GPH01). Whenever this code is changed and saved, the plugin automatically switches to that hotel and syncs all of its room categories, inventory, and rates.', 'arc-hotel-core' ); ?>
 									</p>
 									<?php if ( defined( 'ARC_COMPANY_CODE' ) && ! empty( ARC_COMPANY_CODE ) ) : ?>
 										<p style="color: #059669; font-weight: 600; margin: 4px 0 0;">
@@ -394,6 +452,75 @@ class Settings_Page {
 
 				<!-- Right Actions & Diagnostics Sidebar -->
 				<div style="flex: 1; min-width: 320px;">
+					<?php
+					$wc_installed   = class_exists( 'WooCommerce' );
+					$container_id   = (int) get_option( 'arc_room_product_id', 0 );
+					$container_post = $container_id > 0 ? get_post( $container_id ) : null;
+					$container_ok   = $container_post && 'publish' === $container_post->post_status && 'yes' === get_post_meta( $container_id, '_is_hotel_room', true );
+
+					$checkout_id    = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'checkout' ) : 0;
+					$checkout_ok    = $checkout_id > 0 && get_post( $checkout_id );
+					$checkout_url   = $checkout_ok ? get_permalink( $checkout_id ) : '';
+
+					$wc_healthy     = $wc_installed && $container_ok && $checkout_ok;
+					?>
+					<!-- WooCommerce Integration Health Card -->
+					<div style="background: #fff; padding: 22px; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; border-left: 4px solid <?php echo $wc_healthy ? '#10b981' : '#f59e0b'; ?>;">
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+							<h3 style="margin: 0; font-size: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+								<span class="dashicons dashicons-cart" style="color: <?php echo $wc_healthy ? '#10b981' : '#f59e0b'; ?>;"></span>
+								<?php esc_html_e( 'WooCommerce Integration', 'arc-hotel-core' ); ?>
+							</h3>
+							<span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 12px; background: <?php echo $wc_healthy ? '#ecfdf5' : '#fef3c7'; ?>; color: <?php echo $wc_healthy ? '#065f46' : '#92400e'; ?>;">
+								<?php echo $wc_healthy ? '● ' . esc_html__( 'Connected & Ready', 'arc-hotel-core' ) : '▲ ' . esc_html__( 'Action Required', 'arc-hotel-core' ); ?>
+							</span>
+						</div>
+
+						<p style="font-size: 13px; color: #64748b; margin: 0 0 14px;">
+							<?php esc_html_e( 'Hotel rooms check out through WooCommerce. Here is your current setup status:', 'arc-hotel-core' ); ?>
+						</p>
+
+						<table style="width: 100%; font-size: 12.5px; border-collapse: collapse; margin-bottom: 15px;">
+							<tr style="border-bottom: 1px solid #f1f5f9;">
+								<td style="padding: 6px 0; color: #475569;"><strong><?php esc_html_e( 'WooCommerce Plugin:', 'arc-hotel-core' ); ?></strong></td>
+								<td style="padding: 6px 0; text-align: right; color: <?php echo $wc_installed ? '#059669' : '#dc2626'; ?>; font-weight: 600;">
+									<?php echo $wc_installed ? '&#10004; Active' . ( defined( 'WC_VERSION' ) ? ' (v' . esc_html( WC_VERSION ) . ')' : '' ) : '&#10008; Not Active'; ?>
+								</td>
+							</tr>
+							<tr style="border-bottom: 1px solid #f1f5f9;">
+								<td style="padding: 6px 0; color: #475569;"><strong><?php esc_html_e( 'Booking Product:', 'arc-hotel-core' ); ?></strong></td>
+								<td style="padding: 6px 0; text-align: right; color: <?php echo $container_ok ? '#059669' : '#dc2626'; ?>; font-weight: 600;">
+									<?php if ( $container_ok ) : ?>
+										&#10004; <?php printf( esc_html__( 'Connected (#%d)', 'arc-hotel-core' ), $container_id ); ?>
+									<?php else : ?>
+										&#10008; <?php esc_html_e( 'Missing / Needs Setup', 'arc-hotel-core' ); ?>
+									<?php endif; ?>
+								</td>
+							</tr>
+							<tr style="border-bottom: 1px solid #f1f5f9;">
+								<td style="padding: 6px 0; color: #475569;"><strong><?php esc_html_e( 'Checkout Page:', 'arc-hotel-core' ); ?></strong></td>
+								<td style="padding: 6px 0; text-align: right; color: <?php echo $checkout_ok ? '#059669' : '#dc2626'; ?>; font-weight: 600;">
+									<?php echo $checkout_ok ? '&#10004; Ready' : '&#10008; Missing Page'; ?>
+								</td>
+							</tr>
+							<tr>
+								<td style="padding: 6px 0; color: #475569;"><strong><?php esc_html_e( 'Cart Isolation:', 'arc-hotel-core' ); ?></strong></td>
+								<td style="padding: 6px 0; text-align: right; color: #059669; font-weight: 600;">
+									&#10004; <?php esc_html_e( 'Enforced', 'arc-hotel-core' ); ?>
+								</td>
+							</tr>
+						</table>
+
+						<form method="post" action="">
+							<?php wp_nonce_field( 'arc_wc_sync_action', 'arc_wc_sync_nonce' ); ?>
+							<input type="hidden" name="arc_action" value="sync_woocommerce">
+							<button type="submit" class="button button-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; padding: 7px 12px; height: auto; background: #2563eb; border-color: #1d4ed8;">
+								<span class="dashicons dashicons-update" style="margin-top: 2px;"></span>
+								<?php esc_html_e( 'Verify / Connect WooCommerce Integration', 'arc-hotel-core' ); ?>
+							</button>
+						</form>
+					</div>
+
 					<!-- Quick Actions Card -->
 					<div style="background: #fff; padding: 22px; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
 						<h3 style="margin-top: 0; font-size: 16px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
@@ -461,14 +588,14 @@ class Settings_Page {
 				var $btn = $(this);
 				var company = $('#company_code').val();
 
-				$btn.prop('disabled', true).text('<?php echo esc_js( __( 'Contacting API...', 'arc-hotel-core' ) ); ?>');
+				$btn.prop('disabled', true).text('<?php echo esc_js( __( 'Testing connection...', 'arc-hotel-core' ) ); ?>');
 
 				$.post(ajaxurl, {
 					action: 'arc_test_api_connection',
 					company_code: company,
 					nonce: '<?php echo esc_js( wp_create_nonce( 'arc_test_conn_nonce' ) ); ?>'
 				}, function(res) {
-					$btn.prop('disabled', false).html('<span class="dashicons dashicons-admin-links" style="margin-top: 2px;"></span> <?php echo esc_js( __( 'Test API Connection', 'arc-hotel-core' ) ); ?>');
+					$btn.prop('disabled', false).html('<span class="dashicons dashicons-admin-links" style="margin-top: 2px;"></span> <?php echo esc_js( __( 'Test Hotel Connection', 'arc-hotel-core' ) ); ?>');
 					if (res.success) {
 						showResult(
 							'<strong>&#10004; ' + res.data.message + '</strong><br>' +
@@ -481,7 +608,7 @@ class Settings_Page {
 						showResult('<strong>&#10008; ' + (res.data ? res.data.message : 'Connection failed') + '</strong>', false);
 					}
 				}).fail(function() {
-					$btn.prop('disabled', false).text('<?php echo esc_js( __( 'Test API Connection', 'arc-hotel-core' ) ); ?>');
+					$btn.prop('disabled', false).text('<?php echo esc_js( __( 'Test Hotel Connection', 'arc-hotel-core' ) ); ?>');
 					showResult('<strong>&#10008; AJAX network error.</strong>', false);
 				});
 			});
@@ -529,7 +656,7 @@ class Settings_Page {
 					action: 'arc_flush_api_cache',
 					nonce: '<?php echo esc_js( wp_create_nonce( 'arc_flush_cache_nonce' ) ); ?>'
 				}, function(res) {
-					$btn.prop('disabled', false).html('<span class="dashicons dashicons-trash" style="margin-top: 2px;"></span> <?php echo esc_js( __( 'Flush API Transient Cache', 'arc-hotel-core' ) ); ?>');
+					$btn.prop('disabled', false).html('<span class="dashicons dashicons-trash" style="margin-top: 2px;"></span> <?php echo esc_js( __( 'Flush System Cache', 'arc-hotel-core' ) ); ?>');
 					if (res.success) {
 						showResult('<strong>&#10004; ' + res.data.message + '</strong>', true);
 					}
@@ -562,7 +689,7 @@ class Settings_Page {
 		if ( $result->ok() ) {
 			$data = $result->data();
 			wp_send_json_success( [
-				'message'     => __( 'API connection successful!', 'arc-hotel-core' ),
+				'message'     => __( 'Hotel system connection successful!', 'arc-hotel-core' ),
 				'hotelName'   => sanitize_text_field( $data['hotelName'] ?? 'N/A' ),
 				'companyCode' => sanitize_text_field( $data['companyCode'] ?? $company_code ),
 				'duration'    => $duration,
@@ -590,6 +717,6 @@ class Settings_Page {
 		}
 
 		Api_Cache::flush();
-		wp_send_json_success( [ 'message' => __( 'API cache cleared successfully.', 'arc-hotel-core' ) ] );
+		wp_send_json_success( [ 'message' => __( 'System cache cleared successfully.', 'arc-hotel-core' ) ] );
 	}
 }

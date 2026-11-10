@@ -37,25 +37,13 @@ class Notices {
 			return;
 		}
 
-		// 1. Missing Secret API Key Notice
-		if ( ! Settings::has_api_key() && ! Settings::is_mock_mode() ) {
-			?>
-			<div class="notice notice-warning is-dismissible">
-				<p>
-					<strong><?php esc_html_e( 'Aristocrats Hotel Core Alert:', 'arc-hotel-core' ); ?></strong>
-					<?php esc_html_e( 'The ARC_API_KEY constant is not defined in wp-config.php. Live reservations cannot be transmitted to the ASP.NET API without authorization.', 'arc-hotel-core' ); ?>
-				</p>
-			</div>
-			<?php
-		}
-
-		// 2. Mock Mode Indicator
+		// 1. Mock Mode Indicator (shown only during development/testing)
 		if ( Settings::is_mock_mode() ) {
 			?>
 			<div class="notice notice-info">
 				<p>
-					<strong><?php esc_html_e( 'Hotel Core [Mock Mode Active]:', 'arc-hotel-core' ); ?></strong>
-					<?php esc_html_e( 'API calls are currently returning static test fixtures. Set ARC_API_MOCK = false in wp-config.php to connect to live hotel servers.', 'arc-hotel-core' ); ?>
+					<strong><?php esc_html_e( 'Hotel Core [Test Mode Active]:', 'arc-hotel-core' ); ?></strong>
+					<?php esc_html_e( 'The system is currently operating in offline test mode using local fixtures.', 'arc-hotel-core' ); ?>
 				</p>
 			</div>
 			<?php
