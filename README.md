@@ -64,3 +64,4 @@ define( 'ARC_API_KEY', 'your-production-secret-api-key' );
 * **Anti-Double-Booking Guard:** Real-time overlap verification is executed immediately prior to payment authorization.
 * **Idempotent Synchronization:** Atomic locking mechanism ensures that duplicate payment callbacks produce at most one reservation in the hotel software.
 * **PII Redaction:** National ID, phone, email, and authentication secrets are permanently redacted in diagnostic log tables (`wp_arc_api_log`).
+ 
