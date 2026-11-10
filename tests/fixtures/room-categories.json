@@ -1,0 +1,48 @@
+{
+  "succeeded": true,
+  "message": "Room categories retrieved successfully.",
+  "errors": [],
+  "data": [
+    {
+      "roomTypeId": 3,
+      "categoryName": "Standard Twin Room",
+      "basePricePerNight": 3200,
+      "maxAdults": 2,
+      "maxChildren": 0,
+      "totalRooms": 4,
+      "availableRoomsNow": 4,
+      "imageUrls": [],
+      "amenities": []
+    },
+    {
+      "roomTypeId": 2,
+      "categoryName": "Deluxe Couple Room",
+      "basePricePerNight": 4500,
+      "maxAdults": 2,
+      "maxChildren": 1,
+      "totalRooms": 4,
+      "availableRoomsNow": 4,
+      "thumbnailUrl": "https://hotel.schsems.com/UplodsImg/rooms/GPH01_room101_deluxe_king_bed_19ff54dc_thumb.webp",
+      "imageUrls": [
+        "https://hotel.schsems.com/UplodsImg/rooms/GPH01_room101_deluxe_king_bed_19ff54dc.webp",
+        "https://hotel.schsems.com/UplodsImg/rooms/GPH01_room102_Energypac_BuddhaPurnima_Md__Sahadat_Hossain_927f73e2.webp"
+      ],
+      "amenities": []
+    },
+    {
+      "roomTypeId": 1,
+      "categoryName": "Executive Presidential Suite",
+      "basePricePerNight": 8500,
+      "maxAdults": 2,
+      "maxChildren": 2,
+      "totalRooms": 3,
+      "availableRoomsNow": 3,
+      "imageUrls": [],
+      "amenities": [
+        "High-speed Wi-Fi",
+        "4K Smart TV",
+        "Central Air Conditioned"
+      ]
+    }
+  ]
+}

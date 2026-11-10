@@ -1,0 +1,169 @@
+/**
+ * Scoped Room Checkout Styles (OTA Card & Clean Grid)
+ */
+
+.arc-review-booking-card {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 24px;
+	margin-bottom: 30px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.arc-review-booking-card .arc-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #f1f5f9;
+	padding-bottom: 15px;
+	margin-bottom: 20px;
+}
+
+.arc-review-booking-card .arc-stars {
+	color: #f59e0b;
+	font-size: 14px;
+	letter-spacing: 2px;
+}
+
+.arc-review-booking-card .arc-hotel-name {
+	font-size: 20px;
+	font-weight: 700;
+	color: #0f172a;
+	margin: 4px 0 0 0;
+}
+
+.arc-review-booking-card .arc-badge-stay {
+	background: #0284c7;
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 4px 12px;
+	border-radius: 20px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.arc-review-booking-card .arc-card-body {
+	display: flex;
+	gap: 24px;
+	align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+	.arc-review-booking-card .arc-card-body {
+		flex-direction: column;
+	}
+}
+
+.arc-review-booking-card .arc-card-thumbnail {
+	flex: 0 0 160px;
+	max-width: 160px;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.arc-review-booking-card .arc-card-thumbnail img {
+	width: 100%;
+	height: 120px;
+	object-fit: cover;
+	display: block;
+}
+
+.arc-review-booking-card .arc-card-summary {
+	flex: 1;
+}
+
+.arc-review-booking-card .arc-room-title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #1e293b;
+	margin: 0 0 12px 0;
+}
+
+.arc-review-booking-card .arc-dates-grid {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	background: #f8fafc;
+	padding: 12px 16px;
+	border-radius: 8px;
+	margin-bottom: 12px;
+}
+
+.arc-review-booking-card .arc-date-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.arc-review-booking-card .arc-label {
+	font-size: 11px;
+	text-transform: uppercase;
+	color: #64748b;
+	font-weight: 600;
+}
+
+.arc-review-booking-card .arc-date-val {
+	font-size: 15px;
+	color: #0f172a;
+}
+
+.arc-review-booking-card .arc-time-val {
+	font-size: 11px;
+	color: #94a3b8;
+}
+
+.arc-review-booking-card .arc-date-arrow {
+	font-size: 18px;
+	color: #94a3b8;
+}
+
+.arc-review-booking-card .arc-guests-line {
+	font-size: 13px;
+	color: #475569;
+	margin-bottom: 15px;
+}
+
+.arc-review-booking-card .arc-price-breakdown {
+	border-top: 1px dashed #e2e8f0;
+	padding-top: 12px;
+}
+
+.arc-review-booking-card .arc-price-row {
+	display: flex;
+	justify-content: space-between;
+	font-size: 14px;
+	color: #475569;
+	margin-bottom: 4px;
+}
+
+.arc-review-booking-card .arc-price-total {
+	font-size: 16px;
+	margin-top: 8px;
+	color: #0f172a;
+}
+
+.arc-review-booking-card .arc-highlight {
+	color: #059669;
+	font-size: 18px;
+}
+
+.arc-review-booking-card .arc-card-policy {
+	margin-top: 16px;
+	padding-top: 12px;
+	border-top: 1px solid #f1f5f9;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	font-size: 12px;
+	color: #64748b;
+	background: #fdfbf7;
+	padding: 10px 14px;
+	border-radius: 6px;
+	border-left: 3px solid #f59e0b;
+}
+
+.arc-review-booking-card .arc-policy-icon {
+	color: #f59e0b;
+	font-size: 16px;
+}

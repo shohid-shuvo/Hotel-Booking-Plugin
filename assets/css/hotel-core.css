@@ -1,0 +1,314 @@
+/**
+ * Global Styles for Aristocrats Hotel Showcase, Search, and Results
+ */
+
+.arc-rooms-grid {
+	display: grid;
+	gap: 25px;
+	margin: 30px 0;
+}
+
+.arc-grid-cols-1 { grid-template-columns: 1fr; }
+.arc-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.arc-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.arc-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 992px) {
+	.arc-grid-cols-3, .arc-grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+	.arc-grid-cols-2, .arc-grid-cols-3, .arc-grid-cols-4 { grid-template-columns: 1fr; }
+}
+
+.arc-room-card {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+	display: flex;
+	flex-direction: column;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.arc-room-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.arc-room-thumb {
+	position: relative;
+	height: 220px;
+	overflow: hidden;
+}
+
+.arc-room-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.3s ease;
+}
+
+.arc-room-card:hover .arc-room-thumb img {
+	transform: scale(1.05);
+}
+
+.arc-room-details {
+	padding: 20px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.arc-room-title {
+	font-size: 19px;
+	margin: 0 0 10px 0;
+	font-weight: 700;
+}
+
+.arc-room-title a {
+	color: #0f172a;
+	text-decoration: none;
+}
+
+.arc-room-capacity {
+	font-size: 13px;
+	color: #64748b;
+	margin-bottom: 15px;
+}
+
+.arc-room-amenities {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 20px;
+}
+
+.arc-amenity-pill {
+	background: #f1f5f9;
+	color: #475569;
+	font-size: 11px;
+	padding: 3px 8px;
+	border-radius: 4px;
+}
+
+.arc-room-footer {
+	margin-top: auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-top: 1px solid #f1f5f9;
+	padding-top: 15px;
+}
+
+.arc-room-price {
+	display: flex;
+	flex-direction: column;
+}
+
+.arc-room-price .arc-from {
+	font-size: 11px;
+	color: #94a3b8;
+	text-transform: uppercase;
+}
+
+.arc-price-amount {
+	font-size: 18px;
+	color: #059669;
+}
+
+.arc-btn {
+	display: inline-block;
+	padding: 10px 18px;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 600;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	border: none;
+	transition: background 0.2s;
+}
+
+.arc-btn-primary {
+	background: #0284c7;
+	color: #ffffff;
+}
+
+.arc-btn-primary:hover {
+	background: #0369a1;
+	color: #ffffff;
+}
+
+.arc-btn-block {
+	display: block;
+	width: 100%;
+}
+
+/* Search Bar Form */
+.arc-search-form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	background: #ffffff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+	align-items: flex-end;
+}
+
+.arc-search-field {
+	flex: 1;
+	min-width: 140px;
+	display: flex;
+	flex-direction: column;
+}
+
+.arc-search-field label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #475569;
+	margin-bottom: 6px;
+	text-transform: uppercase;
+}
+
+.arc-search-field input,
+.arc-search-field select {
+	padding: 10px 12px;
+	border: 1px solid #cbd5e1;
+	border-radius: 6px;
+	font-size: 14px;
+	color: #1e293b;
+	outline: none;
+}
+
+.arc-search-field input:focus,
+.arc-search-field select:focus {
+	border-color: #0284c7;
+}
+
+.arc-search-field.arc-field-submit {
+	flex: 0 0 auto;
+}
+
+/* Results Card List */
+.arc-results-list {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin: 25px 0;
+}
+
+.arc-result-card {
+	display: flex;
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+@media (max-width: 768px) {
+	.arc-result-card {
+		flex-direction: column;
+	}
+}
+
+.arc-result-thumb {
+	flex: 0 0 240px;
+}
+
+.arc-result-thumb img {
+	width: 100%;
+	height: 100%;
+	min-height: 180px;
+	object-fit: cover;
+	display: block;
+}
+
+.arc-result-info {
+	flex: 1;
+	padding: 20px;
+}
+
+.arc-result-info h3 {
+	margin: 0 0 8px 0;
+	font-size: 20px;
+	color: #0f172a;
+}
+
+.arc-result-desc {
+	font-size: 13px;
+	color: #64748b;
+	margin-bottom: 12px;
+	line-height: 1.5;
+}
+
+.arc-result-amenities {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 10px;
+}
+
+.arc-rooms-left {
+	font-size: 12px;
+	color: #dc2626;
+	font-weight: 600;
+}
+
+.arc-result-pricing {
+	flex: 0 0 200px;
+	padding: 20px;
+	background: #f8fafc;
+	border-left: 1px solid #e2e8f0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.arc-rate-per-night strong {
+	font-size: 20px;
+	color: #0f172a;
+}
+
+.arc-stay-total {
+	font-size: 13px;
+	color: #475569;
+	margin: 8px 0 15px 0;
+}
+
+/* Track Box */
+.arc-track-form-box {
+	max-width: 480px;
+	margin: 40px auto;
+	padding: 30px;
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.arc-track-form-box .arc-form-group {
+	margin-bottom: 18px;
+	display: flex;
+	flex-direction: column;
+}
+
+.arc-track-form-box label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #334155;
+	margin-bottom: 6px;
+}
+
+.arc-track-form-box input {
+	padding: 10px 14px;
+	border: 1px solid #cbd5e1;
+	border-radius: 6px;
+	font-size: 15px;
+}

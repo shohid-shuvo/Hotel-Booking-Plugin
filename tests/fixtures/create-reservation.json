@@ -1,0 +1,30 @@
+{
+  "succeeded": true,
+  "message": "Reservation created successfully.",
+  "errors": [],
+  "data": {
+    "bookingId": 1001,
+    "bookingNumber": "WEB-20261101-7891",
+    "companyCode": "GPH01",
+    "hotelName": "Hotel Aristocrats & Suites",
+    "registrationToken": "reg_token_mock_abcdef123456",
+    "status": "Reserved",
+    "guestName": "Shohidul Islam",
+    "guestPhone": "01700000000",
+    "guestEmail": "guest@aristocrats.com",
+    "roomNumber": "101",
+    "roomType": "Executive Suite",
+    "checkInDate": "2026-11-05T14:00:00",
+    "checkOutDate": "2026-11-07T12:00:00",
+    "totalNights": 2,
+    "ratePerNight": 8500.0,
+    "subTotal": 17000.0,
+    "discountAmount": 0.0,
+    "totalAmount": 17000.0,
+    "paidAmount": 17000.0,
+    "dueAmount": 0.0,
+    "paymentStatus": "Paid",
+    "confirmationMessage": "Your room has been reserved successfully.",
+    "createdAt": "2026-11-01T17:30:00"
+  }
+}

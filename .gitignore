@@ -1,0 +1,69 @@
+# ==========================================
+# Aristocrats Hotel Booking System (.gitignore)
+# ==========================================
+
+# Explicitly Ignored Folders
+outsidePlugin/
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Logs & Debugging
+*.log
+debug.log
+error_log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE & Editor Specific
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Archives, Backups & Database Dumps
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+*.bak
+*.backup
+*.sql
+*.sqlite
+
+# Build & Temporary Files
+dist/
+build/
+tmp/
+temp/
+.tmp/
+.cache/
+
+# Testing & Coverage
+.phpunit.result.cache
+coverage/

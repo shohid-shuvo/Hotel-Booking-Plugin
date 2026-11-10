@@ -1,0 +1,19 @@
+{
+  "succeeded": true,
+  "message": "Hotel information retrieved successfully.",
+  "errors": [],
+  "data": {
+    "hotelName": "Hotel Aristocrats & Suites",
+    "companyCode": "GPH01",
+    "contactPerson": "General Manager",
+    "phone": "+8801700000000",
+    "email": "reservation@aristocrats.com",
+    "address": "Plot 12, Road 5, Block B, Dhaka, Bangladesh",
+    "standardCheckInTime": "14:00",
+    "standardCheckOutTime": "12:00",
+    "minNights": 1,
+    "maxNights": 30,
+    "maxAdvanceDays": 365,
+    "cancellationPolicyText": "Free cancellation up to 48 hours before check-in date. Cancellations made within 48 hours are subject to a 100% first night charge."
+  }
+}
