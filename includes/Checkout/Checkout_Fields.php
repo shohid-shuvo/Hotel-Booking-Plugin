@@ -226,6 +226,7 @@ class Checkout_Fields {
 					<textarea name="arc_special_note" id="arc_special_note" rows="2" class="input-text" placeholder="<?php esc_attr_e( 'E.g., honeymoon setup, dietary considerations, etc.', 'arc-hotel-core' ); ?>"></textarea>
 				</p>
 			</div>
+			<p class="form-row form-row-wide"><label><input type="checkbox" name="arc_terms" value="1" required /> <?php esc_html_e( 'I agree to the hotel Terms & Conditions and Cancellation Policy.', 'arc-hotel-core' ); ?></label></p>
 		</div>
 		<?php
 	}
@@ -244,13 +245,13 @@ class Checkout_Fields {
 		}
 
 		$order->update_meta_data( '_arc_order_type', 'room' );
-		$order->update_meta_data( '_arc_sync_status', 'pending' );
+		if ( ! $order->get_meta( '_arc_sync_status' ) ) { $order->update_meta_data( '_arc_sync_status', 'pending' ); }
 
 		// Save booking cart specifications
 		if ( ! $order->get_meta( '_arc_booking' ) ) {
 			foreach ( WC()->cart->get_cart() as $item ) {
 				if ( ! empty( $item['arc_room'] ) ) {
-					$order->update_meta_data( '_arc_booking', $item['arc_room'] );
+					$order->update_meta_data( '_arc_booking', \ARC\HotelCore\Booking\Room_Quote::normalize_booking( $item['arc_room'] ) );
 					break;
 				}
 			}
@@ -296,6 +297,6 @@ class Checkout_Fields {
 		}
 
 		$order->update_meta_data( '_arc_requests', $requests );
-		$order->update_meta_data( '_arc_sync_status', 'pending' );
+		if ( ! $order->get_meta( '_arc_sync_status' ) ) { $order->update_meta_data( '_arc_sync_status', 'pending' ); }
 	}
 }

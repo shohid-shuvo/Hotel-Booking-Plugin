@@ -26,6 +26,10 @@ if ( ! function_exists( '__' ) ) {
 	function __( $text, $domain = 'default' ) { return $text; }
 }
 
+if ( ! function_exists( 'apply_filters' ) ) {
+	function apply_filters( $hook, $value, ...$args ) { return $value; }
+}
+
 require_once ARC_PLUGIN_DIR . 'includes/Api/Api_Result.php';
 require_once ARC_PLUGIN_DIR . 'includes/Api/Api_Mock.php';
 require_once ARC_PLUGIN_DIR . 'includes/Api/Api_Logger.php';

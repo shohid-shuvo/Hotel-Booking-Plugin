@@ -10,7 +10,7 @@
 
 namespace ARC\HotelCore\Elementor;
 
-use ARC\HotelCore\Api\Api_Client;
+use ARC\HotelCore\Booking\Room_Quote;
 use ARC\HotelCore\Settings\Settings;
 use ARC\HotelCore\Rooms\Room_Post_Type;
 use ARC\HotelCore\Plugin;
@@ -129,27 +129,12 @@ class Room_Booking_Form {
 					</div>
 				</div>
 
-				<button type="submit" class="arc-book-now-btn" style="width:100%;background:#1e3a8a;color:#fff;border:0;padding:14px 18px;border-radius:6px;font-weight:700;font-size:15px;letter-spacing:0.5px;cursor:pointer;transition:background 0.2s ease;">
+				<button type="submit" class="arc-book-now-btn" style="width:100%;background:#1e3a8a;color:#fff;border:0;padding:14px 18px;border-radius:3px;font-weight:700;font-size:15px;letter-spacing:0.5px;cursor:pointer;transition:background 0.2s ease;">
 					<?php esc_html_e( 'Book Now &bull; Proceed to Checkout', 'arc-hotel-core' ); ?> &rarr;
 				</button>
 			</form>
 		</div>
 
-		<script>
-		(function () {
-			var inEl = document.getElementById('arc_check_in');
-			var outEl = document.getElementById('arc_check_out');
-			if (!inEl || !outEl) { return; }
-			inEl.addEventListener('change', function () {
-				var d = new Date(inEl.value + 'T00:00:00');
-				if (isNaN(d.getTime())) { return; }
-				d.setDate(d.getDate() + 1);
-				var min = d.toISOString().slice(0, 10);
-				outEl.min = min;
-				if (!outEl.value || outEl.value <= inEl.value) { outEl.value = min; }
-			});
-		})();
-		</script>
 		<?php
 		return ob_get_clean();
 	}
@@ -169,7 +154,8 @@ class Room_Booking_Form {
 			self::fail( $back, __( 'Session expired or invalid security token. Please refresh the page and try again.', 'arc-hotel-core' ) );
 		}
 
-		if ( ! $post_id || Room_Post_Type::POST_TYPE !== get_post_type( $post_id ) ) {
+		if ( ! $post_id || Room_Post_Type::POST_TYPE !== get_post_type( $post_id )
+			|| get_post_meta( $post_id, '_arc_company_code', true ) !== Settings::get( 'company_code' ) ) {
 			self::fail( $back, __( 'Invalid hotel room selected.', 'arc-hotel-core' ) );
 		}
 
@@ -223,7 +209,7 @@ class Room_Booking_Form {
 		}
 
 		$rate  = (float) ( $picked['pricePerNight'] ?? 0 );
-		$total = (float) ( $picked['totalPrice'] ?? ( $rate * $nights ) );
+		$total = (float) ( $picked['totalPrice'] ?? 0 );
 		if ( $rate <= 0 || $total <= 0 ) {
 			self::fail( $back, __( 'Pricing information is currently unavailable for this room.', 'arc-hotel-core' ) );
 		}
@@ -266,10 +252,12 @@ class Room_Booking_Form {
 		}
 
 		$booking_data = [
+			'company_code' => Settings::get( 'company_code' ),
 			'room_type_id'   => $room_type_id,
 			'room_type_name' => (string) ( $picked['roomTypeName'] ?? get_the_title( $post_id ) ),
 			'room_post_id'   => $post_id,
 			'room_id'        => (int) ( $picked['roomId'] ?? 0 ),
+			'api_room_id'    => (int) ( $picked['roomId'] ?? 0 ),
 			'room_number'    => (string) ( $picked['roomNumber'] ?? '' ),
 			'check_in'       => $check_in,
 			'check_out'      => $check_out,
@@ -308,20 +296,7 @@ class Room_Booking_Form {
 	 * @return array|\WP_Error List of available room arrays.
 	 */
 	private static function fetch_available( string $check_in, string $check_out, int $room_type_id, int $adults ) {
-		$company = Settings::get( 'company_code' );
-		$client  = new Api_Client();
-
-		$result = $client->get(
-			'api/v1/public-booking/available-rooms',
-			[
-				'checkIn'     => $check_in . 'T14:00:00',
-				'checkOut'    => $check_out . 'T12:00:00',
-				'roomTypeId'  => $room_type_id,
-				'adults'      => $adults,
-				'companyCode' => $company,
-			],
-			[ 'use_cache' => false ]
-		);
+		$result = Room_Quote::search( $check_in, $check_out, $adults, 0, $room_type_id );
 
 		if ( ! $result || ! $result->ok() || ! is_array( $result->data() ) ) {
 			return new \WP_Error( 'arc_api', $result ? $result->message() : 'availability_failed' );
@@ -330,18 +305,7 @@ class Room_Booking_Form {
 		return $result->data();
 	}
 
-	/**
-	 * Verify booking form nonce across logged-in and guest (cached/REST) contexts.
-	 *
-	 * When pages are cached or nonces are refreshed via the REST fresh-nonces endpoint,
-	 * the nonce is generated in an unauthenticated (guest, UID 0) context. If a logged-in
-	 * administrator or customer submits the form, WordPress's standard wp_verify_nonce
-	 * hashes against their logged-in UID and would reject the valid guest nonce.
-	 * This method checks both contexts cleanly.
-	 *
-	 * @param string $nonce Submitted nonce string.
-	 * @return bool True if valid for either the current user or guest session.
-	 */
+	/** Verify the submitting user's nonce; cached guest pages refresh through REST. */
 	public static function verify_form_nonce( string $nonce ): bool {
 		if ( empty( $nonce ) ) {
 			return false;
@@ -350,17 +314,6 @@ class Room_Booking_Form {
 		// 1. Direct verify against current user (guest if guest, logged-in user if logged-in)
 		if ( wp_verify_nonce( $nonce, self::ACTION ) || wp_verify_nonce( $nonce, 'arc_add_room_to_cart' ) ) {
 			return true;
-		}
-
-		// 2. If current user is logged in, but nonce was fetched from REST fresh-nonces (which generated for UID 0)
-		if ( is_user_logged_in() ) {
-			$current_uid = get_current_user_id();
-			wp_set_current_user( 0 );
-			$guest_valid = wp_verify_nonce( $nonce, self::ACTION ) || wp_verify_nonce( $nonce, 'arc_add_room_to_cart' );
-			wp_set_current_user( $current_uid );
-			if ( $guest_valid ) {
-				return true;
-			}
 		}
 
 		return false;

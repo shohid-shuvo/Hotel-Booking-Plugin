@@ -37,8 +37,16 @@ class Api_Client {
 	 * @return Api_Result
 	 */
 	public function get( string $path, array $query = [], array $opts = [] ): Api_Result {
-		$use_cache   = $opts['use_cache'] ?? true;
-		$cache_ttl   = $opts['cache_ttl'] ?? 0;
+		if ( Api_Mock::is_enabled() ) {
+			return Api_Mock::get_mock_result( $path, $query ) ?? Api_Result::error( 'FIXTURE_NOT_FOUND', 'No fixture exists for this operation.', 404 );
+		}
+
+		if ( ! isset( $query['companyCode'] ) && in_array( trim( $path, '/' ), [ 'api/v1/public-booking/hotel-info', 'api/v1/public-booking/room-categories', 'api/v1/public-booking/available-rooms' ], true ) ) {
+			$query['companyCode'] = Settings::get( 'company_code' );
+		}
+		$cache_allowed = in_array( trim( $path, '/' ), [ 'api/v1/public-booking/hotel-info', 'api/v1/public-booking/room-categories' ], true );
+		$use_cache   = $cache_allowed && ( $opts['use_cache'] ?? true );
+		$cache_ttl   = $use_cache ? (int) ( $opts['cache_ttl'] ?? 0 ) : 0;
 		$retry_count = $opts['retries'] ?? 1;
 
 		// 1. Check transient cache if requested and allowed
@@ -52,16 +60,18 @@ class Api_Client {
 		// 2. Check Mock mode
 		if ( Api_Mock::is_enabled() ) {
 			$mock_result = Api_Mock::get_mock_result( $path, $query );
-			if ( $mock_result ) {
-				return $mock_result;
-			}
+			return $mock_result ?? Api_Result::error( 'FIXTURE_NOT_FOUND', 'No fixture exists for this operation.', 404 );
 		}
 
 		// Inject company code if not already present
-		if ( ! isset( $query['companyCode'] ) ) {
+		if ( ! isset( $query['companyCode'] ) && in_array( trim( $path, '/' ), [ 'api/v1/public-booking/hotel-info', 'api/v1/public-booking/room-categories', 'api/v1/public-booking/available-rooms' ], true ) ) {
 			$query['companyCode'] = Settings::get( 'company_code' );
 		}
 
+		$configuration = $this->validate_configuration( (string) ( $query['companyCode'] ?? Settings::get( 'company_code' ) ) );
+		if ( null !== $configuration ) {
+			return $configuration;
+		}
 		$base_url = Settings::get( 'api_base_url' );
 		$url      = trailingslashit( $base_url ) . ltrim( $path, '/' );
 		$full_url = add_query_arg( $query, $url );
@@ -81,7 +91,7 @@ class Api_Client {
 		$args = [
 			'method'      => 'GET',
 			'timeout'     => self::READ_TIMEOUT,
-			'redirection' => 2,
+			'redirection' => 0,
 			'httpversion' => '1.1',
 			'user-agent'  => 'AristocratsHotelWordPress/' . ( defined( 'ARC_VERSION' ) ? ARC_VERSION : '1.0' ),
 			'headers'     => $headers,
@@ -113,16 +123,18 @@ class Api_Client {
 		// 1. Check Mock mode
 		if ( Api_Mock::is_enabled() ) {
 			$mock_result = Api_Mock::get_mock_result( $path, $body );
-			if ( $mock_result ) {
-				return $mock_result;
-			}
+			return $mock_result ?? Api_Result::error( 'FIXTURE_NOT_FOUND', 'No fixture exists for this operation.', 404 );
 		}
 
 		// Inject company code if missing in body
-		if ( ! isset( $body['companyCode'] ) ) {
+		if ( ! isset( $body['companyCode'] ) && trim( $path, '/' ) === 'api/v1/public-booking/create-reservation-json' ) {
 			$body['companyCode'] = Settings::get( 'company_code' );
 		}
 
+		$configuration = $this->validate_configuration( (string) ( $body['companyCode'] ?? Settings::get( 'company_code' ) ) );
+		if ( null !== $configuration ) {
+			return $configuration;
+		}
 		$base_url = Settings::get( 'api_base_url' );
 		$full_url = trailingslashit( $base_url ) . ltrim( $path, '/' );
 
@@ -142,7 +154,7 @@ class Api_Client {
 		$args = [
 			'method'      => 'POST',
 			'timeout'     => self::WRITE_TIMEOUT,
-			'redirection' => 2,
+			'redirection' => 0,
 			'httpversion' => '1.1',
 			'user-agent'  => 'AristocratsHotelWordPress/' . ( defined( 'ARC_VERSION' ) ? ARC_VERSION : '1.0' ),
 			'headers'     => $headers,
@@ -181,7 +193,7 @@ class Api_Client {
 		// Connection error
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			Api_Logger::log( $endpoint, $method, 0, $duration_ms, $correlation_id, false, $request_data, null, $error_message );
+			Api_Logger::log( $endpoint, $method, 0, $duration_ms, $correlation_id, false, $request_data, null, 'CONNECTION_ERROR' );
 			return Api_Result::error( 'CONNECTION_ERROR', 'Unable to connect to the hotel booking system. Please try again shortly.', 0 );
 		}
 
@@ -191,11 +203,11 @@ class Api_Client {
 
 		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $parsed ) ) {
 			$error_msg = 'Invalid JSON response from hotel server. Status: ' . $http_code;
-			Api_Logger::log( $endpoint, $method, $http_code, $duration_ms, $correlation_id, false, $request_data, $raw_body, $error_msg );
+			Api_Logger::log( $endpoint, $method, $http_code, $duration_ms, $correlation_id, false, $request_data, null, 'INVALID_JSON' );
 			return Api_Result::error( 'INVALID_JSON', 'Invalid response from booking server.', $http_code );
 		}
 
-		$succeeded  = ! empty( $parsed['succeeded'] );
+		$succeeded  = isset( $parsed['succeeded'] ) && true === $parsed['succeeded'];
 		$data       = $parsed['data'] ?? null;
 		$message    = $parsed['message'] ?? '';
 		$errors     = $parsed['errors'] ?? [];
@@ -213,8 +225,8 @@ class Api_Client {
 		}
 
 		// If error response
-		$error_detail = ! empty( $errors ) ? implode( '; ', (array) $errors ) : $message;
-		Api_Logger::log( $endpoint, $method, $http_code, $duration_ms, $correlation_id, false, $request_data, $parsed, $error_detail );
+		$error_detail = $error_code;
+		Api_Logger::log( $endpoint, $method, $http_code, $duration_ms, $correlation_id, false, $request_data, $parsed, $error_code );
 
 		$safe_message = $this->get_safe_error_message( $error_code, $message );
 		return Api_Result::error( $error_code, $safe_message, $http_code, $parsed, $data );
@@ -270,7 +282,17 @@ class Api_Client {
 			'INVALID_DATES'      => __( 'Invalid dates selected. Please check your check-in and check-out dates.', 'arc-hotel-core' ),
 			'RATE_LIMITED'      => __( 'Too many requests. Please wait a moment and try again.', 'arc-hotel-core' ),
 			'UNAUTHORIZED'       => __( 'Booking service authorization failed. Please contact hotel support.', 'arc-hotel-core' ),
-			default              => ! empty( $fallback ) ? esc_html( $fallback ) : __( 'An unexpected error occurred while processing your reservation. Please try again.', 'arc-hotel-core' ),
+			default              => __( 'The hotel service could not complete this request. Please contact hotel support.', 'arc-hotel-core' ),
 		};
+	}
+
+	/** Configuration failures must never send guest information to an unsafe URL. */
+	private function validate_configuration( string $company ): ?Api_Result {
+		$url = (string) Settings::get( 'api_base_url' );
+		if ( '' === trim( $company )
+			|| ! str_starts_with( $url, 'https://' ) || ! wp_http_validate_url( $url ) ) {
+			return Api_Result::error( 'CONFIGURATION_ERROR', __( 'The hotel booking service is not configured. Please contact hotel support.', 'arc-hotel-core' ), 0 );
+		}
+		return null;
 	}
 }

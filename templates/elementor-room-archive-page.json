@@ -1,0 +1,1449 @@
+{
+  "content": [
+    {
+      "id": "aa00009",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "layout": "boxed",
+        "content_width": {
+          "unit": "px",
+          "size": 1200,
+          "sizes": []
+        },
+        "gap": "no",
+        "stretch_section": "",
+        "css_classes": "arc-archive-hero",
+        "background_background": "classic",
+        "background_color": "#082465",
+        "padding": {
+          "unit": "px",
+          "top": "78",
+          "right": "24",
+          "bottom": "82",
+          "left": "24",
+          "isLinked": false
+        },
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "html_tag": "section",
+        "custom_css": "/* Static UI stays editable in native Elementor widgets. */\nselector {\n  background: var(--arc-brand-navy, #082465);\n  color: #FFFFFF;\n}\nselector .elementor-widget { margin-bottom: 0; }\nselector .elementor-widget-wrap { flex-direction: column; align-content: center; gap: 20px; }\nselector .arc-archive-eyebrow .elementor-heading-title { color: var(--arc-brand-orange, #F48C06); }\nselector .arc-archive-hero-title .elementor-heading-title { color: #FFFFFF; }\nselector .arc-archive-hero-copy { max-width: 680px; margin-inline: auto; color: #FFFFFF; }\nselector .elementor-text-editor p, selector .elementor-widget-text-editor p { margin: 0; }\nselector .arc-archive-breadcrumbs .elementor-icon-list-items { justify-content: center; gap: 14px; }\nselector .arc-archive-breadcrumbs .elementor-icon-list-text { color: #FFFFFF; }\nselector .arc-archive-breadcrumbs .elementor-icon-list-icon i { color: var(--arc-brand-orange, #F48C06); }\nselector .arc-archive-breadcrumbs .elementor-icon-list-icon svg { fill: var(--arc-brand-orange, #F48C06); }\nselector .arc-archive-breadcrumbs a:hover .elementor-icon-list-text { color: var(--arc-brand-orange, #F48C06); }\nselector .elementor-divider-separator { border-color: var(--arc-brand-orange, #F48C06); }\nselector a:focus-visible { outline: 2px solid var(--arc-brand-orange, #F48C06); outline-offset: 5px; }\n",
+        "padding_tablet": {
+          "unit": "px",
+          "top": "66",
+          "right": "24",
+          "bottom": "70",
+          "left": "24",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "px",
+          "top": "52",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "aa00008",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null,
+            "space_between_widgets": 0,
+            "css_classes": "",
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "margin": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "aa00001",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "title": "ARISTOCRATS",
+                "header_size": "span",
+                "title_color": "#F48C06",
+                "align": "center",
+                "_css_classes": "arc-archive-eyebrow",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 12,
+                  "sizes": []
+                },
+                "typography_font_weight": "600",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.5,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "px",
+                  "size": 2.5,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00002",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "title": "Rooms & Suites",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "align": "center",
+                "_css_classes": "arc-archive-hero-title",
+                "typography_typography": "custom",
+                "typography_font_family": "Playfair Display",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 64,
+                  "sizes": []
+                },
+                "typography_font_weight": "600",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.2,
+                  "sizes": []
+                },
+                "typography_font_size_tablet": {
+                  "unit": "px",
+                  "size": 50,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 40,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00003",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "editor": "<p>Make room for a memorable stay. Explore comfortable rooms and suites, then find the right space for your dates and guests.</p>",
+                "align": "center",
+                "text_color": "#FFFFFF",
+                "_css_classes": "arc-archive-hero-copy",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 17,
+                  "sizes": []
+                },
+                "typography_font_weight": "400",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.7,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00007",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "style": "solid",
+                "color": "#F48C06",
+                "weight": {
+                  "unit": "px",
+                  "size": 3,
+                  "sizes": []
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 64,
+                  "sizes": []
+                },
+                "align": "center",
+                "gap": {
+                  "unit": "px",
+                  "size": 0,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00006",
+              "elType": "widget",
+              "widgetType": "icon-list",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_css_classes": "arc-archive-breadcrumbs",
+                "view": "inline",
+                "icon_color": "#F48C06",
+                "text_color": "#FFFFFF",
+                "icon_size": {
+                  "unit": "px",
+                  "size": 12,
+                  "sizes": []
+                },
+                "text_indent": {
+                  "unit": "px",
+                  "size": 7,
+                  "sizes": []
+                },
+                "icon_align": "center",
+                "icon_typography_typography": "custom",
+                "icon_typography_font_family": "Inter",
+                "icon_typography_font_size": {
+                  "unit": "px",
+                  "size": 13,
+                  "sizes": []
+                },
+                "icon_typography_font_weight": "400",
+                "icon_typography_line_height": {
+                  "unit": "em",
+                  "size": 1.7,
+                  "sizes": []
+                },
+                "icon_list": [
+                  {
+                    "_id": "aa00004",
+                    "text": "Home",
+                    "selected_icon": {
+                      "value": "fas fa-home",
+                      "library": "fa-solid"
+                    },
+                    "link": {
+                      "url": "/",
+                      "is_external": "",
+                      "nofollow": ""
+                    }
+                  },
+                  {
+                    "_id": "aa00005",
+                    "text": "Rooms & Suites",
+                    "selected_icon": {
+                      "value": "fas fa-chevron-right",
+                      "library": "fa-solid"
+                    },
+                    "link": {
+                      "url": "",
+                      "is_external": "",
+                      "nofollow": ""
+                    }
+                  }
+                ]
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aa0000e",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "layout": "boxed",
+        "content_width": {
+          "unit": "px",
+          "size": 1200,
+          "sizes": []
+        },
+        "gap": "no",
+        "stretch_section": "",
+        "css_classes": "arc-archive-search",
+        "background_background": "classic",
+        "background_color": "#F0F8FB",
+        "padding": {
+          "unit": "px",
+          "top": "20",
+          "right": "24",
+          "bottom": "20",
+          "left": "24",
+          "isLinked": false
+        },
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "html_tag": "section",
+        "custom_css": "/* Search submission and date/guest handling remain owned by [arc_search]. */\nselector {\n  background: var(--arc-brand-tint, #F0F8FB);\n  z-index: 40;\n  overflow: visible;\n  border-bottom: 1px solid rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .08);\n}\nselector.elementor-sticky--active { box-shadow: 0 8px 24px rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .08); }\nselector .arc-archive-search-card > .elementor-widget-wrap {\n  flex-direction: column;\n  gap: 10px;\n  padding: 24px;\n  background: #FFFFFF;\n  border: 1px solid rgba(var(--arc-brand-teal-rgb, 10, 116, 166), .15);\n  border-top: 3px solid var(--arc-brand-cyan, #1B9EC2);\n  border-radius: 12px;\n  box-shadow: 0 6px 24px rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .06);\n}\nselector .elementor-widget { margin-bottom: 0; }\nselector .arc-archive-search-title .elementor-heading-title { color: var(--arc-brand-navy, #082465); }\nselector .arc-archive-search-copy { color: var(--arc-brand-teal, #0A74A6); }\nselector .elementor-widget-text-editor p { margin: 0; }\nselector .arc-archive-search-shortcode { margin-top: 6px; }\nselector .arc-search-form {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1.2fr)) repeat(2, minmax(0, .7fr)) minmax(180px, 1fr);\n  gap: 16px;\n  align-items: end;\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  background: transparent;\n  box-shadow: none;\n}\nselector .arc-search-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; width: auto; margin: 0; padding: 0; }\nselector .arc-search-field label { margin: 0; color: var(--arc-brand-navy, #082465); font-family: Inter, Arial, sans-serif; font-size: 12px; font-weight: 600; line-height: 1.5; }\nselector .arc-search-field input, selector .arc-search-field select {\n  box-sizing: border-box;\n  width: 100%;\n  min-width: 0;\n  min-height: 48px;\n  margin: 0;\n  padding: 10px 12px;\n  border: 1px solid rgba(var(--arc-brand-teal-rgb, 10, 116, 166), .35);\n  border-radius: 6px;\n  background: #FFFFFF;\n  color: var(--arc-brand-navy, #082465);\n  font-family: Inter, Arial, sans-serif;\n  font-size: 14px;\n  line-height: 1.5;\n  color-scheme: light;\n}\nselector .arc-search-submit {\n  width: 100%;\n  min-height: 48px;\n  padding: 12px 16px;\n  border: 1px solid var(--arc-brand-orange, #F48C06);\n  border-radius: 6px;\n  background: var(--arc-brand-orange, #F48C06);\n  color: var(--arc-brand-navy, #082465);\n  font-family: Inter, Arial, sans-serif;\n  font-size: 14px;\n  font-weight: 600;\n  line-height: 1.5;\n  white-space: normal;\n  cursor: pointer;\n  box-shadow: none;\n}\nselector .arc-search-submit:hover { border-color: var(--arc-brand-orange-hover, #D97706); background: var(--arc-brand-orange-hover, #D97706); color: var(--arc-brand-navy, #082465); }\nselector input:focus-visible, selector select:focus-visible, selector button:focus-visible { outline: 2px solid var(--arc-brand-teal, #0A74A6); outline-offset: 3px; }\n@media (max-width: 1024px) {\n  selector .arc-search-form { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }\n  selector .arc-field-submit { grid-column: 1 / -1; }\n  selector .arc-archive-search-card > .elementor-widget-wrap { padding: 20px; }\n}\n@media (max-width: 767px) {\n  selector .arc-search-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n  selector .arc-archive-search-card > .elementor-widget-wrap { padding: 18px; }\n  selector .arc-search-field input, selector .arc-search-field select { font-size: 16px; padding-inline: 8px; }\n}\n",
+        "sticky": "top",
+        "sticky_on": [
+          "desktop",
+          "tablet"
+        ],
+        "sticky_offset": 0,
+        "sticky_effects_offset": 0,
+        "padding_mobile": {
+          "unit": "px",
+          "top": "16",
+          "right": "16",
+          "bottom": "16",
+          "left": "16",
+          "isLinked": true
+        }
+      },
+      "elements": [
+        {
+          "id": "aa0000d",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null,
+            "space_between_widgets": 0,
+            "css_classes": "arc-archive-search-card",
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "margin": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "aa0000a",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "title": "Find your perfect stay",
+                "header_size": "h2",
+                "title_color": "#082465",
+                "align": "left",
+                "_css_classes": "arc-archive-search-title",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 22,
+                  "sizes": []
+                },
+                "typography_font_weight": "600",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.5,
+                  "sizes": []
+                },
+                "typography_font_size_tablet": {
+                  "unit": "px",
+                  "size": 21,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 20,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa0000b",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "editor": "<p>Choose your dates and guests to check availability.</p>",
+                "align": "left",
+                "text_color": "#0A74A6",
+                "_css_classes": "arc-archive-search-copy",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": []
+                },
+                "typography_font_weight": "400",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.7,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa0000c",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "shortcode": "[arc_search]",
+                "_css_classes": "arc-archive-search-shortcode"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aa00014",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "layout": "boxed",
+        "content_width": {
+          "unit": "px",
+          "size": 1200,
+          "sizes": []
+        },
+        "gap": "no",
+        "stretch_section": "",
+        "css_classes": "arc-archive-catalogue",
+        "background_background": "classic",
+        "background_color": "#FFFFFF",
+        "padding": {
+          "unit": "px",
+          "top": "72",
+          "right": "24",
+          "bottom": "80",
+          "left": "24",
+          "isLinked": false
+        },
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "html_tag": "section",
+        "custom_css": "/* The existing renderer supplies every room, permalink and starting rate. */\nselector { background: #FFFFFF; }\nselector .elementor-widget { margin-bottom: 0; }\nselector .elementor-widget-wrap { flex-direction: column; gap: 16px; }\nselector .arc-archive-grid-eyebrow .elementor-heading-title { color: var(--arc-brand-teal, #0A74A6); }\nselector .arc-archive-grid-title .elementor-heading-title { color: var(--arc-brand-navy, #082465); }\nselector .arc-archive-grid-copy { max-width: 700px; color: var(--arc-brand-navy, #082465); }\nselector .elementor-widget-text-editor p { margin: 0; }\nselector .arc-rooms-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; width: 100%; margin: 16px 0 0; }\nselector .arc-room-card {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  overflow: hidden;\n  border: 1px solid rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .12);\n  border-radius: 0;\n  background: #FFFFFF;\n  box-shadow: 0 5px 20px rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .04);\n  transition: border-color .2s ease, box-shadow .2s ease;\n}\nselector .arc-room-card:hover { border-color: var(--arc-brand-cyan, #1B9EC2); box-shadow: 0 12px 32px rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .10); }\nselector .arc-room-thumb { position: relative; flex-shrink: 0; width: 100%; height: auto; aspect-ratio: 4 / 3; overflow: hidden; }\nselector .arc-room-thumb a { display: block; width: 100%; height: 100%; }\nselector .arc-room-thumb img { display: block; width: 100%; max-width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 0; transition: transform .5s ease; }\nselector .arc-room-card:hover .arc-room-thumb img { transform: scale(1.035); }\n/* The renderer's badge has inline colors; only its presentation is overridden. */\nselector .arc-room-badge { background: var(--arc-brand-navy, #082465) !important; color: #FFFFFF !important; border-radius: 0 !important; font-family: Inter, Arial, sans-serif; }\nselector .arc-room-details { display: flex; flex: 1 1 auto; flex-direction: column; gap: 14px; min-width: 0; padding: 23px; }\nselector .arc-room-title { margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: 25px; font-weight: 600; line-height: 1.25; }\nselector .arc-room-title a { color: var(--arc-brand-navy, #082465); text-decoration: none; overflow-wrap: anywhere; }\nselector .arc-room-title a:hover { color: var(--arc-brand-teal, #0A74A6); }\nselector .arc-room-capacity { display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 0; color: var(--arc-brand-navy, #082465); font-family: Inter, Arial, sans-serif; font-size: 12px; line-height: 1.7; }\nselector .arc-room-amenities { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }\nselector .arc-amenity-pill { display: inline-flex; max-width: 100%; margin: 0; padding: 5px 8px; border: 1px solid rgba(var(--arc-brand-teal-rgb, 10, 116, 166), .18); border-radius: 0; background: var(--arc-brand-tint, #F0F8FB); color: var(--arc-brand-navy, #082465); font-family: Inter, Arial, sans-serif; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }\nselector .arc-room-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 18px; border-top: 1px solid rgba(var(--arc-brand-navy-rgb, 8, 36, 101), .12); }\nselector .arc-room-price { min-width: 0; color: var(--arc-brand-navy, #082465); }\nselector .arc-from, selector .arc-per-night { color: var(--arc-brand-teal, #0A74A6); font-family: Inter, Arial, sans-serif; font-size: 11px; line-height: 1.5; }\nselector .arc-price-amount { display: block; color: var(--arc-brand-navy, #082465); font-family: 'Playfair Display', Georgia, serif; font-size: 26px; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }\nselector .arc-room-footer .arc-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; padding: 12px 15px; border: 1px solid var(--arc-brand-orange, #F48C06); border-radius: 0; background: var(--arc-brand-orange, #F48C06); color: var(--arc-brand-navy, #082465); font-family: Inter, Arial, sans-serif; font-size: 13px; font-weight: 600; line-height: 1.5; text-decoration: none; white-space: normal; }\nselector .arc-room-footer .arc-btn-primary:hover { border-color: var(--arc-brand-orange-hover, #D97706); background: var(--arc-brand-orange-hover, #D97706); color: var(--arc-brand-navy, #082465); }\nselector a:focus-visible { outline: 2px solid var(--arc-brand-teal, #0A74A6); outline-offset: 3px; }\nselector .arc-no-rooms { padding: 24px; border: 1px solid rgba(var(--arc-brand-teal-rgb, 10, 116, 166), .18); background: var(--arc-brand-tint, #F0F8FB); color: var(--arc-brand-navy, #082465); }\n@media (max-width: 1024px) { selector .arc-rooms-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; } }\n@media (max-width: 767px) { selector .arc-rooms-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; } selector .arc-room-details { padding: 20px; } }\n@media (prefers-reduced-motion: reduce) { selector .arc-room-card, selector .arc-room-thumb img { transition: none; } selector .arc-room-card:hover .arc-room-thumb img { transform: none; } }\n",
+        "padding_tablet": {
+          "unit": "px",
+          "top": "60",
+          "right": "24",
+          "bottom": "64",
+          "left": "24",
+          "isLinked": false
+        },
+        "padding_mobile": {
+          "unit": "px",
+          "top": "48",
+          "right": "20",
+          "bottom": "52",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "aa00013",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null,
+            "space_between_widgets": 0,
+            "css_classes": "",
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "margin": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "aa0000f",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "title": "FIND YOUR SPACE",
+                "header_size": "span",
+                "title_color": "#0A74A6",
+                "align": "left",
+                "_css_classes": "arc-archive-grid-eyebrow",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 12,
+                  "sizes": []
+                },
+                "typography_font_weight": "600",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.5,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "px",
+                  "size": 2,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00010",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "title": "Explore Rooms & Suites",
+                "header_size": "h2",
+                "title_color": "#082465",
+                "align": "left",
+                "_css_classes": "arc-archive-grid-title",
+                "typography_typography": "custom",
+                "typography_font_family": "Playfair Display",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 38,
+                  "sizes": []
+                },
+                "typography_font_weight": "600",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.2,
+                  "sizes": []
+                },
+                "typography_font_size_tablet": {
+                  "unit": "px",
+                  "size": 34,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 30,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00011",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "editor": "<p>Browse our rooms and suites, then view the details of your favourite. Check availability for your dates to see the exact rate for your stay.</p>",
+                "align": "left",
+                "text_color": "#082465",
+                "_css_classes": "arc-archive-grid-copy",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 16,
+                  "sizes": []
+                },
+                "typography_font_weight": "400",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.7,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa00012",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "shortcode": "[arc_rooms columns=\"3\" limit=\"-1\"]",
+                "_css_classes": "arc-archive-room-grid"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aa00021",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "layout": "boxed",
+        "content_width": {
+          "unit": "px",
+          "size": 1200,
+          "sizes": []
+        },
+        "gap": "no",
+        "stretch_section": "",
+        "css_classes": "arc-archive-policies",
+        "background_background": "classic",
+        "background_color": "#F0F8FB",
+        "padding": {
+          "unit": "px",
+          "top": "64",
+          "right": "24",
+          "bottom": "72",
+          "left": "24",
+          "isLinked": false
+        },
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "html_tag": "section",
+        "custom_css": "selector { background: var(--arc-brand-tint, #F0F8FB); }\nselector .elementor-widget { margin-bottom: 0; }\nselector > .elementor-container > .elementor-column > .elementor-widget-wrap { flex-direction: column; gap: 16px; }\nselector .arc-archive-policies-title .elementor-heading-title { color: var(--arc-brand-navy, #082465); }\nselector .arc-archive-policies-copy { color: var(--arc-brand-navy, #082465); }\nselector .elementor-widget-text-editor p { margin: 0; }\nselector .arc-archive-policies-grid { margin-top: 14px; }\nselector .arc-archive-policies-grid > .elementor-container { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; width: 100%; max-width: none; }\nselector .arc-archive-policy-card { width: 100% !important; min-width: 0; }\nselector .arc-archive-policy-card > .elementor-widget-wrap { display: flex; align-content: flex-start; padding: 28px 20px; border: 1px solid rgba(var(--arc-brand-teal-rgb, 10, 116, 166), .15); border-radius: 12px; background: #FFFFFF; }\nselector .arc-archive-policy-card .elementor-widget { width: 100%; }\nselector .elementor-icon { color: var(--arc-brand-teal, #0A74A6); }\nselector .elementor-icon svg { fill: var(--arc-brand-teal, #0A74A6); }\nselector .elementor-icon-box-title, selector .elementor-icon-box-description { color: var(--arc-brand-navy, #082465); }\nselector .elementor-icon-box-description strong { display: inline-block; margin-bottom: 4px; font-size: 20px; font-weight: 600; }\n@media (max-width: 1024px) { selector .arc-archive-policies-grid > .elementor-container { grid-template-columns: repeat(2, minmax(0, 1fr)); } }\n@media (max-width: 767px) { selector .arc-archive-policies-grid > .elementor-container { grid-template-columns: minmax(0, 1fr); gap: 16px; } }\n",
+        "padding_mobile": {
+          "unit": "px",
+          "top": "48",
+          "right": "20",
+          "bottom": "52",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "aa00020",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null,
+            "space_between_widgets": 0,
+            "css_classes": "",
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "margin": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "aa0001e",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "title": "A comfortable stay, made simple",
+                "header_size": "h2",
+                "title_color": "#082465",
+                "align": "center",
+                "_css_classes": "arc-archive-policies-title",
+                "typography_typography": "custom",
+                "typography_font_family": "Playfair Display",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 34,
+                  "sizes": []
+                },
+                "typography_font_weight": "600",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.2,
+                  "sizes": []
+                },
+                "typography_font_size_tablet": {
+                  "unit": "px",
+                  "size": 34,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 30,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa0001f",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "editor": "<p>Useful details and thoughtful essentials for your visit.</p>",
+                "align": "center",
+                "text_color": "#082465",
+                "_css_classes": "arc-archive-policies-copy",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 15,
+                  "sizes": []
+                },
+                "typography_font_weight": "400",
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.7,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "aa0001d",
+              "elType": "section",
+              "isInner": true,
+              "settings": {
+                "layout": "full_width",
+                "content_width": {
+                  "unit": "px",
+                  "size": 1200,
+                  "sizes": []
+                },
+                "gap": "no",
+                "stretch_section": "",
+                "css_classes": "arc-archive-policies-grid",
+                "background_background": "classic",
+                "background_color": "#F0F8FB",
+                "padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "html_tag": "section"
+              },
+              "elements": [
+                {
+                  "id": "aa00016",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 25,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-archive-policy-card",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "_inline_size_tablet": 50,
+                    "_inline_size_mobile": 100
+                  },
+                  "elements": [
+                    {
+                      "id": "aa00015",
+                      "elType": "widget",
+                      "widgetType": "icon-box",
+                      "settings": {
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "selected_icon": {
+                          "value": "fas fa-key",
+                          "library": "fa-solid"
+                        },
+                        "view": "default",
+                        "position": "top",
+                        "title_text": "Check-in",
+                        "description_text": "<strong>14:00</strong><br>Plan your arrival.",
+                        "title_size": "h3",
+                        "text_align": "center",
+                        "primary_color": "#0A74A6",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 18,
+                          "sizes": []
+                        },
+                        "title_bottom_space": {
+                          "unit": "px",
+                          "size": 10,
+                          "sizes": []
+                        },
+                        "title_color": "#082465",
+                        "description_color": "#082465",
+                        "title_typography_typography": "custom",
+                        "title_typography_font_family": "Inter",
+                        "title_typography_font_size": {
+                          "unit": "px",
+                          "size": 20,
+                          "sizes": []
+                        },
+                        "title_typography_font_weight": "600",
+                        "title_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.4,
+                          "sizes": []
+                        },
+                        "description_typography_typography": "custom",
+                        "description_typography_font_family": "Inter",
+                        "description_typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "description_typography_font_weight": "400",
+                        "description_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.7,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    }
+                  ]
+                },
+                {
+                  "id": "aa00018",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 25,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-archive-policy-card",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "_inline_size_tablet": 50,
+                    "_inline_size_mobile": 100
+                  },
+                  "elements": [
+                    {
+                      "id": "aa00017",
+                      "elType": "widget",
+                      "widgetType": "icon-box",
+                      "settings": {
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "selected_icon": {
+                          "value": "fas fa-clock",
+                          "library": "fa-solid"
+                        },
+                        "view": "default",
+                        "position": "top",
+                        "title_text": "Check-out",
+                        "description_text": "<strong>11:00</strong><br>Plan your departure.",
+                        "title_size": "h3",
+                        "text_align": "center",
+                        "primary_color": "#0A74A6",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 18,
+                          "sizes": []
+                        },
+                        "title_bottom_space": {
+                          "unit": "px",
+                          "size": 10,
+                          "sizes": []
+                        },
+                        "title_color": "#082465",
+                        "description_color": "#082465",
+                        "title_typography_typography": "custom",
+                        "title_typography_font_family": "Inter",
+                        "title_typography_font_size": {
+                          "unit": "px",
+                          "size": 20,
+                          "sizes": []
+                        },
+                        "title_typography_font_weight": "600",
+                        "title_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.4,
+                          "sizes": []
+                        },
+                        "description_typography_typography": "custom",
+                        "description_typography_font_family": "Inter",
+                        "description_typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "description_typography_font_weight": "400",
+                        "description_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.7,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    }
+                  ]
+                },
+                {
+                  "id": "aa0001a",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 25,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-archive-policy-card",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "_inline_size_tablet": 50,
+                    "_inline_size_mobile": 100
+                  },
+                  "elements": [
+                    {
+                      "id": "aa00019",
+                      "elType": "widget",
+                      "widgetType": "icon-box",
+                      "settings": {
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "selected_icon": {
+                          "value": "fas fa-wifi",
+                          "library": "fa-solid"
+                        },
+                        "view": "default",
+                        "position": "top",
+                        "title_text": "Free Wi-Fi",
+                        "description_text": "Stay connected throughout your visit.",
+                        "title_size": "h3",
+                        "text_align": "center",
+                        "primary_color": "#0A74A6",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 18,
+                          "sizes": []
+                        },
+                        "title_bottom_space": {
+                          "unit": "px",
+                          "size": 10,
+                          "sizes": []
+                        },
+                        "title_color": "#082465",
+                        "description_color": "#082465",
+                        "title_typography_typography": "custom",
+                        "title_typography_font_family": "Inter",
+                        "title_typography_font_size": {
+                          "unit": "px",
+                          "size": 20,
+                          "sizes": []
+                        },
+                        "title_typography_font_weight": "600",
+                        "title_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.4,
+                          "sizes": []
+                        },
+                        "description_typography_typography": "custom",
+                        "description_typography_font_family": "Inter",
+                        "description_typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "description_typography_font_weight": "400",
+                        "description_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.7,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    }
+                  ]
+                },
+                {
+                  "id": "aa0001c",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 25,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-archive-policy-card",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "_inline_size_tablet": 50,
+                    "_inline_size_mobile": 100
+                  },
+                  "elements": [
+                    {
+                      "id": "aa0001b",
+                      "elType": "widget",
+                      "widgetType": "icon-box",
+                      "settings": {
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "selected_icon": {
+                          "value": "fas fa-headset",
+                          "library": "fa-solid"
+                        },
+                        "view": "default",
+                        "position": "top",
+                        "title_text": "24/7 Front Desk",
+                        "description_text": "Our team is here to help, day and night.",
+                        "title_size": "h3",
+                        "text_align": "center",
+                        "primary_color": "#0A74A6",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 28,
+                          "sizes": []
+                        },
+                        "icon_space": {
+                          "unit": "px",
+                          "size": 18,
+                          "sizes": []
+                        },
+                        "title_bottom_space": {
+                          "unit": "px",
+                          "size": 10,
+                          "sizes": []
+                        },
+                        "title_color": "#082465",
+                        "description_color": "#082465",
+                        "title_typography_typography": "custom",
+                        "title_typography_font_family": "Inter",
+                        "title_typography_font_size": {
+                          "unit": "px",
+                          "size": 20,
+                          "sizes": []
+                        },
+                        "title_typography_font_weight": "600",
+                        "title_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.4,
+                          "sizes": []
+                        },
+                        "description_typography_typography": "custom",
+                        "description_typography_font_family": "Inter",
+                        "description_typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "description_typography_font_weight": "400",
+                        "description_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.7,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "template": "elementor_header_footer",
+    "hide_title": "yes",
+    "background_background": "classic",
+    "background_color": "#FFFFFF"
+  },
+  "version": "0.4",
+  "title": "Aristocrats - Rooms & Suites Archive Page",
+  "type": "page"
+}

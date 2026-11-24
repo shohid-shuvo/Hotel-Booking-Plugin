@@ -104,6 +104,7 @@ if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_
 			if (mainImg && thumbs.length > 0) {
 				thumbs.forEach(function(thumb) {
 					thumb.addEventListener('click', function() {
+						mainImg.removeAttribute('srcset');
 						mainImg.src = this.src;
 						thumbs.forEach(function(t) { t.classList.remove('active'); });
 						this.classList.add('active');

@@ -89,6 +89,8 @@ class Settings_Page {
 		];
 
 		Settings::update( $raw_input );
+		\ARC\HotelCore\Support\Scheduler::ensure();
+		Settings::get_hotel_info( true );
 		Api_Cache::flush();
 		flush_rewrite_rules( false );
 
@@ -165,6 +167,7 @@ class Settings_Page {
 		}
 
 		$settings        = Settings::get_all();
+		$settings['company_code'] = Settings::get( 'company_code' );
 		$has_api_key     = Settings::has_api_key();
 		$is_mock         = Settings::is_mock_mode();
 		$hotel_info      = Settings::get_hotel_info();
@@ -318,7 +321,7 @@ class Settings_Page {
 							<tr>
 								<th scope="row"><?php esc_html_e( 'API Connection', 'arc-hotel-core' ); ?></th>
 								<td>
-									<span style="color: #059669; font-weight: 600;">● <?php esc_html_e( 'Hotel Cloud API Connected (Encrypted HTTPS)', 'arc-hotel-core' ); ?></span>
+									<span style="color: #059669; font-weight: 600;">● <?php echo esc_html( ! empty( $hotel_info['_verified'] ) ? __( 'Hotel Profile Verified (HTTPS)', 'arc-hotel-core' ) : __( 'Use Test API Connection to verify setup', 'arc-hotel-core' ) ); ?></span>
 									<p class="description"><?php esc_html_e( 'Backend API endpoints are securely locked internally to prevent accidental client disruption.', 'arc-hotel-core' ); ?></p>
 								</td>
 							</tr>

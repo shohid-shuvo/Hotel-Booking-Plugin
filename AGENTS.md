@@ -34,6 +34,12 @@ The system operates as a unified 3-tier ecosystem sharing a single central REST 
 - **Discussions with the User:** MUST be written in **Bangla using Bengali script (বাংলা)**. Never use Banglish (Latin script) when explaining or conversing with the user.
 - **Code & Comments:** All code, comments, docstrings, and commit messages MUST be written strictly in **English**.
 
+### Website Brand Colors
+
+- Use the user-approved Aristocrats logo palette for this website: Navy `#082465`, Teal `#0A74A6`, Cyan `#1B9EC2`, Orange `#F48C06`, Hover Orange `#D97706`, and Light Tint `#F0F8FB`.
+- Follow the color roles and contrast requirements in [instructions.md](instructions.md#website-brand-colors). Use the shared `--arc-brand-*` CSS properties in `assets/css/hotel-core.css` rather than introducing another decorative palette.
+- Keep body text readable: use Navy text on Orange buttons, and reserve Cyan for accents instead of small text on light backgrounds.
+
 ### Zero Third-Party Hotel Plugins
 - Do NOT use or reference third-party WordPress hotel plugins (e.g., `WP Hotel Booking`, `hb_room`).
 - All hotel room handling is 100% custom PHP talking directly to the ASP.NET REST API endpoints specified in `agent-instructions/hotel-all-Api-End-point.json`.

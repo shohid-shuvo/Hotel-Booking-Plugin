@@ -3,14 +3,14 @@
  * Plugin Name: Aristocrats Hotel Core
  * Plugin URI:  https://dusrasoftltd.com
  * Description: Enterprise ASP.NET Hotel Management API integration for WordPress, WooCommerce, and Elementor Pro.
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      DUSRA Soft Limited
  * Author URI:  https://dusrasoftltd.com
  * Text Domain: arc-hotel-core
  * Domain Path: /languages
  * Requires at least: 6.2
  * Requires PHP: 8.2
- * WC requires at least: 8.0
+ * WC requires at least: 8.2
  *
  * @package ARC\HotelCore
  */
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define core constants
-define( 'ARC_VERSION', '1.0.0' );
+define( 'ARC_VERSION', '1.1.0' );
 define( 'ARC_PLUGIN_FILE', __FILE__ );
 define( 'ARC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ARC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

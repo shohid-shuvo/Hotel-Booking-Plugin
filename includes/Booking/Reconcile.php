@@ -1,123 +1,81 @@
 <?php
-/**
- * Reservation Reconcile Engine.
- *
- * @package ARC\HotelCore\Booking
- */
-
+/** Paginated ERP reconciliation. Financial values and stay dates are never overwritten. */
 namespace ARC\HotelCore\Booking;
-
 use ARC\HotelCore\Api\Api_Client;
+use ARC\HotelCore\Settings\Settings;
+use ARC\HotelCore\Support\Database_Lock;
+use ARC\HotelCore\Support\Guest_Identity;
+use ARC\HotelCore\Support\Order_Query;
+defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/**
- * Reconciles upcoming active bookings against the ASP.NET API.
- */
 class Reconcile {
-
-	/**
-	 * Hook cron and manual reconcile actions.
-	 *
-	 * @return void
-	 */
 	public function init(): void {
 		add_action( 'arc_daily_reconcile', [ $this, 'run_reconciliation' ] );
 		add_action( 'wp_ajax_arc_manual_reconcile', [ $this, 'ajax_manual_reconcile' ] );
 	}
-
-	/**
-	 * Run reconciliation for upcoming synced bookings.
-	 *
-	 * @return array Reconcile summary.
-	 */
 	public function run_reconciliation(): array {
-		$today = current_time( 'Y-m-d' );
-
-		// Query synced room orders with upcoming or active stays
-		$orders = wc_get_orders( [
-			'limit'        => 50,
-			'status'       => [ 'processing', 'completed', 'on-hold' ],
-			'meta_key'     => '_arc_sync_status',
-			'meta_value'   => 'synced',
-		] );
-
-		$checked = 0;
-		$updated = 0;
-		$client  = new Api_Client();
-
-		foreach ( $orders as $order ) {
-			$booking_no = $order->get_meta( '_arc_aspnet_reservation_no' );
-			$booking    = (array) $order->get_meta( '_arc_booking' );
-			$check_out  = $booking['check_out'] ?? '';
-
-			if ( empty( $booking_no ) || ( ! empty( $check_out ) && $check_out < $today ) ) {
-				continue; // Skip past checkouts
+		$summary = [ 'success'=>true, 'checked'=>0, 'updated'=>0, 'errors'=>0 ];
+		if ( ! Database_Lock::acquire( 'reconcile' ) ) { return [ 'success'=>false, 'checked'=>0, 'updated'=>0, 'errors'=>1 ]; }
+		try {
+			// Snapshot IDs before changing states, so pagination never skips modified rows.
+			$ids = [];
+			$page = 1;
+			do {
+				$batch = Order_Query::get_orders( [ 'limit'=>50, 'page'=>$page++, 'orderby'=>'date', 'order'=>'ASC', 'meta_query'=>[ [ 'key'=>'_arc_order_type','value'=>'room' ], [ 'key'=>'_arc_sync_status','value'=>[ 'synced','sending' ],'compare'=>'IN' ] ] ] );
+				$added = 0;
+				foreach ( $batch as $order ) {
+					if ( ! isset( $ids[ $order->get_id() ] ) ) { $ids[ $order->get_id() ] = $order->get_id(); $added++; }
+				}
+				if ( $batch && ! $added ) { $summary['errors']++; break; }
+			} while ( count( $batch ) === 50 );
+			foreach ( $ids as $id ) {
+				$order = wc_get_order( $id );
+				if ( ! $order ) { continue; }
+				$order->read_meta_data( true );
+				if ( 'sending' === $order->get_meta( '_arc_sync_status' ) ) {
+					if ( (int) $order->get_meta( '_arc_sync_started_at' ) < time() - 120 ) { Reservation_Sync::observe_inflight( $id ); }
+					continue;
+				}
+				$booking = (array) $order->get_meta( '_arc_booking' );
+				if ( 'synced' !== $order->get_meta( '_arc_sync_status' ) || ( $booking['check_out'] ?? '' ) < current_time( 'Y-m-d' ) || ! Database_Lock::acquire( 'order_' . $id ) ) { continue; }
+				try {
+					$summary['checked']++;
+					$reference = (string) $order->get_meta( '_arc_aspnet_reservation_no' );
+					$result = ( new Api_Client() )->get( 'api/v1/public-booking/track/' . rawurlencode( $reference ), [], [ 'use_cache'=>false ] );
+					if ( ! $result->ok() ) { $summary['errors']++; continue; }
+					$row = is_array( $result->data() ) ? Guest_Identity::find_booking( $result->data(), $reference, $order->get_billing_phone(), Settings::get( 'company_code' ) ) : null;
+					if ( ! $row || ! is_numeric( $row['totalAmount'] ?? null )
+						|| substr( (string) ( $row['checkInDate'] ?? '' ),0,10 ) !== ( $booking['check_in'] ?? '' )
+						|| substr( (string) ( $row['checkOutDate'] ?? '' ),0,10 ) !== ( $booking['check_out'] ?? '' )
+						|| abs( (float) $row['totalAmount'] - (float) ( $booking['total_price'] ?? 0 ) ) > 0.01 ) {
+						$message = __( 'ERP reconciliation found missing or changed booking details. Review dates and payment; no automatic refund was made.', 'arc-hotel-core' );
+						$order->update_meta_data( '_arc_sync_status','manual' );
+						$order->update_meta_data( '_arc_sync_last_error',$message );
+						$order->save(); $order->add_order_note( $message );
+						\ARC\HotelCore\Emails\Email_Manager::send_admin_sync_failed_alert( $id,$message,'RECONCILE' );
+						$summary['updated']++; continue;
+					}
+					$changed = false;
+					foreach ( [ 'roomNumber'=>'_arc_aspnet_room_number','paymentStatus'=>'_arc_api_payment_status','paidAmount'=>'_arc_api_paid_amount','dueAmount'=>'_arc_api_due_amount' ] as $field=>$meta ) {
+						if ( isset( $row[ $field ] ) && (string) $row[ $field ] !== (string) $order->get_meta( $meta ) ) {
+							$order->update_meta_data( $meta, sanitize_text_field( (string) $row[ $field ] ) ); $changed = true;
+						}
+					}
+					if ( strtolower( trim( (string) ( $row['status'] ?? '' ) ) ) === 'cancelled' && ! in_array( $order->get_status(),[ 'cancelled','refunded' ],true ) ) {
+						$order->update_status( 'cancelled', __( 'ERP cancellation confirmed. No automatic WooCommerce refund was made.', 'arc-hotel-core' ) ); $changed = true;
+					}
+					if ( $changed ) { $order->save(); $order->add_order_note( __( 'ERP room/payment information was refreshed.', 'arc-hotel-core' ) ); $summary['updated']++; }
+				} catch ( \Throwable $error ) { $summary['errors']++; }
+				finally { Database_Lock::release( 'order_' . $id ); }
 			}
-
-			$checked++;
-			$api_res = $client->get( 'api/v1/public-booking/track/' . rawurlencode( $booking_no ), [], [ 'use_cache' => false ] );
-
-			if ( ! $api_res->ok() ) {
-				continue;
-			}
-
-			$data = $api_res->data();
-			if ( empty( $data ) ) {
-				continue;
-			}
-
-			$remote_info = is_array( $data ) && isset( $data[0] ) ? $data[0] : $data;
-			$remote_status = sanitize_text_field( $remote_info['status'] ?? '' );
-			$remote_room   = sanitize_text_field( $remote_info['roomNumber'] ?? '' );
-
-			$local_room = (string) $order->get_meta( '_arc_aspnet_room_number' );
-
-			// Check for room reassignment in hotel software
-			if ( ! empty( $remote_room ) && $remote_room !== $local_room ) {
-				$order->update_meta_data( '_arc_aspnet_room_number', $remote_room );
-				$order->add_order_note(
-					sprintf(
-						/* translators: 1: New room number, 2: Old room number */
-						__( 'Reconcile: Receptionist reassigned room from %1$s to %2$s in hotel software.', 'arc-hotel-core' ),
-						$local_room ?: 'Unassigned',
-						$remote_room
-					)
-				);
-				$order->save();
-				$updated++;
-			}
-
-			// Check for cancellation in receptionist software
-			if ( 'Cancelled' === $remote_status && 'cancelled' !== $order->get_status() ) {
-				$order->add_order_note( __( 'Reconcile notice: This reservation was marked CANCELLED in the hotel software. Note: WooCommerce order was NOT auto-refunded.', 'arc-hotel-core' ) );
-				$order->update_status( 'cancelled', __( 'Cancelled in receptionist software.', 'arc-hotel-core' ) );
-				$updated++;
-			}
-		}
-
-		return [
-			'success' => true,
-			'checked' => $checked,
-			'updated' => $updated,
-		];
+			update_option( 'arc_cron_last_run',time(),false );
+			$summary['success'] = 0 === $summary['errors'];
+		} finally { Database_Lock::release( 'reconcile' ); }
+		return $summary;
 	}
-
-	/**
-	 * AJAX handler for manual admin trigger.
-	 *
-	 * @return void
-	 */
 	public function ajax_manual_reconcile(): void {
-		check_ajax_referer( 'arc_reconcile_nonce', 'nonce' );
-
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Permission denied.', 'arc-hotel-core' ) ] );
-		}
-
-		$stats = $this->run_reconciliation();
-		wp_send_json_success( $stats );
+		check_ajax_referer( 'arc_reconcile_nonce','nonce' );
+		if ( ! current_user_can( 'manage_woocommerce' ) ) { wp_send_json_error( [ 'message'=>__( 'Permission denied.','arc-hotel-core' ) ],403 ); }
+		wp_send_json_success( $this->run_reconciliation() );
 	}
 }

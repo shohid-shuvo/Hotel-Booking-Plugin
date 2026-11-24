@@ -29,6 +29,8 @@ class Api_Cache {
 	 * @return string
 	 */
 	public static function key( string $endpoint, array $params = [] ): string {
+		$generation = (int) get_option( 'arc_cache_generation', 0 );
+		$endpoint = $generation . '/' . $endpoint;
 		$clean_path = str_replace( [ '/', '-' ], '_', trim( $endpoint, '/' ) );
 		if ( ! empty( $params ) ) {
 			ksort( $params );
@@ -83,6 +85,8 @@ class Api_Cache {
 	 * @return void
 	 */
 	public static function flush(): void {
+		update_option( 'arc_cache_generation', (int) get_option( 'arc_cache_generation', 0 ) + 1, false );
+		delete_transient( 'arc_hotel_info_' . md5( \ARC\HotelCore\Settings\Settings::get( 'company_code' ) ) );
 		global $wpdb;
 		$like = '_transient_' . self::PREFIX . '%';
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) );

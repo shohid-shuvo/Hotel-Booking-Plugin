@@ -82,6 +82,6 @@ class Api_Mock {
 		$payload   = $data['data'] ?? null;
 		$message   = $data['message'] ?? 'Mock response';
 
-		return new Api_Result( $succeeded, $payload, '', $message, 200, $data );
+		return apply_filters( 'arc_api_mock_result', new Api_Result( $succeeded, $payload, '', $message, 200, $data ), $clean_endpoint, $body );
 	}
 }

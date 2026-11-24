@@ -20,6 +20,7 @@ class Api_Logger {
 	 * Table name without prefix.
 	 */
 	const TABLE_NAME = 'arc_api_log';
+	private static bool $ready = false;
 
 	/**
 	 * Get full table name with prefix.
@@ -63,6 +64,7 @@ class Api_Logger {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
+		self::$ready = true;
 		self::migrate_legacy_logs();
 	}
 
@@ -72,6 +74,8 @@ class Api_Logger {
 	 * @return void
 	 */
 	public static function migrate_legacy_logs(): void {
+		if ( '1.1.0' === get_option( 'arc_log_privacy_version' ) ) { return; }
+
 		global $wpdb;
 		$table_name = self::get_table_name();
 
@@ -88,11 +92,9 @@ class Api_Logger {
 		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'reservation_cancel' WHERE endpoint LIKE '%cancel-reservation%'" );
 		$wpdb->query( "UPDATE {$table_name} SET endpoint = 'reservation_track' WHERE endpoint LIKE '%track%'" );
 
-		// Clear payloads for succeeded rows to protect internal schema
-		$is_debug = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'ARC_DEV_MODE' ) && ARC_DEV_MODE );
-		if ( ! $is_debug ) {
-			$wpdb->query( "UPDATE {$table_name} SET request_payload = NULL, response_payload = NULL WHERE succeeded = 1" );
-		}
+		// Remove legacy diagnostic payloads which predate complete PII redaction.
+		$wpdb->query( "UPDATE {$table_name} SET request_payload = NULL, response_payload = NULL, error_message = CASE WHEN error_message IS NULL THEN NULL ELSE 'Legacy API error details removed for privacy.' END" );
+		update_option( 'arc_log_privacy_version', '1.1.0', false );
 	}
 
 	/**
@@ -188,10 +190,10 @@ class Api_Logger {
 
 		$table_name = self::get_table_name();
 
-		// Check if table exists to avoid fatal error during early calls before activation.
-		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
-		if ( ! $table_exists ) {
-			self::install_table();
+		if ( ! self::$ready ) {
+			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+			if ( ! $table_exists ) { self::install_table(); }
+			self::$ready = true;
 		}
 
 		$is_debug       = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'ARC_DEV_MODE' ) && ARC_DEV_MODE );
@@ -212,7 +214,7 @@ class Api_Logger {
 				'succeeded'        => $succeeded ? 1 : 0,
 				'request_payload'  => ! empty( $redacted_request ) ? wp_json_encode( $redacted_request ) : null,
 				'response_payload' => ! empty( $redacted_response ) ? wp_json_encode( $redacted_response ) : null,
-				'error_message'    => $error_message ? sanitize_text_field( $error_message ) : null,
+				'error_message'    => $error_message ? 'API request failed. Review the operation and HTTP status.' : null,
 			],
 			[ '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%s', '%s', '%s' ]
 		);
@@ -255,7 +257,7 @@ class Api_Logger {
 			if ( json_last_error() === JSON_ERROR_NONE && is_array( $decoded ) ) {
 				return self::redact( $decoded );
 			}
-			return $data;
+			return '***REDACTED TEXT***';
 		}
 
 		if ( ! is_array( $data ) ) {
@@ -263,6 +265,7 @@ class Api_Logger {
 		}
 
 		$sensitive_keys = [
+			'reason', 'transactionReference', 'fullName', 'guestName', 'address', 'specialRequests', 'paymentRemarks', 'registrationToken', 'signatureDataUrl',
 			'nationalIdOrPassport',
 			'national_id',
 			'nid',
@@ -289,6 +292,8 @@ class Api_Logger {
 		foreach ( $data as $key => $value ) {
 			if ( is_string( $key ) && in_array( strtolower( $key ), array_map( 'strtolower', $sensitive_keys ), true ) ) {
 				$clean[ $key ] = '***REDACTED***';
+			} elseif ( in_array( strtolower( (string) $key ), [ 'message', 'errors' ], true ) || ( is_int( $key ) && is_string( $value ) ) ) {
+				$clean[ $key ] = self::redact( $value );
 			} elseif ( is_array( $value ) ) {
 				$clean[ $key ] = self::redact( $value );
 			} else {
