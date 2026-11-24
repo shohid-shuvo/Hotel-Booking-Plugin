@@ -179,7 +179,7 @@ class Room_Post_Type {
 	public function register_meta_boxes(): void {
 		add_meta_box(
 			'arc_room_api_details',
-			__( 'ASP.NET API Room Specifications', 'arc-hotel-core' ),
+			__( 'Room Specifications & Sync Details', 'arc-hotel-core' ),
 			[ $this, 'render_meta_box' ],
 			self::POST_TYPE,
 			'normal',
@@ -214,7 +214,7 @@ class Room_Post_Type {
 		?>
 		<div style="padding: 10px 0;">
 			<p>
-				<em><?php esc_html_e( 'These specifications are synchronized directly from the ASP.NET Hotel Management API. Live pricing and availability are queried directly in real-time.', 'arc-hotel-core' ); ?></em>
+				<em><?php esc_html_e( 'These specifications are synchronized directly from the central Hotel Management System.', 'arc-hotel-core' ); ?></em>
 			</p>
 			<table class="form-table" role="presentation">
 				<tr>
@@ -226,7 +226,7 @@ class Room_Post_Type {
 					<td><?php echo esc_html( implode( ' &bull; ', array_filter( [ $floor_name, $bld_name ] ) ) ?: '—' ); ?></td>
 				</tr>
 				<tr>
-					<th scope="row"><strong><?php esc_html_e( 'Room Type ID (API):', 'arc-hotel-core' ); ?></strong></th>
+					<th scope="row"><strong><?php esc_html_e( 'Category ID:', 'arc-hotel-core' ); ?></strong></th>
 					<td><code><?php echo esc_html( $room_type_id ?: 'Not Synced' ); ?></code></td>
 				</tr>
 				<tr>
@@ -298,6 +298,30 @@ class Room_Post_Type {
 	 * @return string Resolved template path.
 	 */
 	public function template_loader( string $template ): string {
+		// If an Elementor canvas, fullwidth or theme builder template was already resolved, do not override it.
+		if ( ! empty( $template ) && false !== strpos( $template, 'elementor' ) ) {
+			return $template;
+		}
+
+		// Check if Elementor Pro Theme Builder has an active document assigned for this location.
+		if ( class_exists( '\ElementorPro\Plugin' ) ) {
+			$theme_builder = \ElementorPro\Plugin::instance()->modules_manager->get_modules( 'theme-builder' );
+			if ( $theme_builder && method_exists( $theme_builder, 'get_conditions_manager' ) ) {
+				$conditions_manager = $theme_builder->get_conditions_manager();
+				if ( is_singular( self::POST_TYPE ) ) {
+					$documents = $conditions_manager->get_documents_for_location( 'single' );
+					if ( ! empty( $documents ) ) {
+						return $template;
+					}
+				} elseif ( is_post_type_archive( self::POST_TYPE ) ) {
+					$documents = $conditions_manager->get_documents_for_location( 'archive' );
+					if ( ! empty( $documents ) ) {
+						return $template;
+					}
+				}
+			}
+		}
+
 		if ( is_singular( self::POST_TYPE ) ) {
 			$theme_template = locate_template( [ 'single-arc_room.php' ] );
 			if ( ! empty( $theme_template ) ) {

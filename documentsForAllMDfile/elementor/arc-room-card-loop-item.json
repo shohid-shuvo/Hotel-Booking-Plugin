@@ -1,0 +1,684 @@
+{
+  "content": [
+    {
+      "id": "a1c1001",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "layout": "full_width",
+        "gap": "no",
+        "stretch_section": "",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "margin": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "border_radius": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "css_classes": "arc-room-editorial",
+        "html_tag": "article",
+        "background_background": "classic",
+        "background_color": "#ffffff",
+        "border_border": "solid",
+        "border_width": {
+          "unit": "px",
+          "top": "1",
+          "right": "1",
+          "bottom": "1",
+          "left": "1",
+          "isLinked": true
+        },
+        "border_color": "#e5e7e0",
+        "custom_css": "/* Room data comes from the current arc_room loop post. */\nselector {\n  box-sizing: border-box;\n  --arc-card-green: #17332b;\n  --arc-card-gold: #c19d60;\n  --arc-card-ink: #1f1f1f;\n  --arc-card-muted: #656a65;\n  display: block;\n  width: 100%;\n  height: 100%;\n  min-width: 0;\n  padding: 0;\n  gap: 0;\n  overflow: hidden;\n  isolation: isolate;\n  border: 1px solid #e5e7e0;\n  border-radius: 0 !important;\n  background: #ffffff;\n  box-shadow: 0 5px 20px rgba(23, 51, 43, .035);\n  transition: border-color .25s ease, box-shadow .25s ease;\n}\nselector:hover {\n  border-color: var(--arc-card-gold);\n  box-shadow: 0 12px 32px rgba(23, 51, 43, .09);\n}\nselector *, selector *::before, selector *::after {\n  box-sizing: border-box;\n  border-radius: 0 !important;\n}\nselector .elementor-widget { margin-bottom: 0; min-width: 0; }\nselector .elementor-widget-container { margin: 0; }\n/* Legacy Section/Column wrappers; no Elementor Container element is needed. */\nselector > .elementor-container {\n  display: flex;\n  align-items: stretch;\n  width: 100%;\n  max-width: none;\n  height: 100%;\n  margin: 0;\n}\nselector .arc-card-shell {\n  display: flex;\n  width: 100%;\n  min-width: 0;\n}\nselector .arc-card-shell > .elementor-widget-wrap {\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n  align-content: stretch;\n  align-items: stretch;\n  width: 100%;\n  min-width: 0;\n  padding: 0;\n  gap: 0;\n}\nselector .arc-card-image { width: 100%; flex-shrink: 0; overflow: hidden; }\nselector .arc-card-image .elementor-widget-container,\nselector .arc-card-image a { display: block; overflow: hidden; }\nselector .arc-card-image img {\n  display: block;\n  width: 100%;\n  max-width: 100%;\n  height: auto;\n  aspect-ratio: 4 / 3;\n  object-fit: cover;\n  object-position: center;\n  transition: transform .65s cubic-bezier(.2, .65, .3, 1);\n}\nselector:hover .arc-card-image img { transform: scale(1.035); }\nselector .arc-card-body {\n  display: block;\n  flex: 1 1 auto;\n  width: 100%;\n  min-width: 0;\n  margin: 0;\n  padding: 23px 23px 12px;\n}\nselector .arc-card-body > .elementor-container {\n  display: flex;\n  width: 100%;\n  max-width: none;\n  margin: 0;\n}\nselector .arc-card-content { width: 100%; min-width: 0; }\nselector .arc-card-content > .elementor-widget-wrap {\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n  align-content: stretch;\n  align-items: stretch;\n  padding: 0;\n  gap: 12px;\n}\nselector .arc-card-eyebrow .elementor-heading-title {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  margin: 0;\n  color: #806237;\n  font-family: Inter, Arial, sans-serif;\n  font-size: 10px;\n  line-height: 1.5;\n  font-weight: 600;\n  letter-spacing: 2px;\n}\nselector .arc-card-eyebrow .elementor-heading-title::before {\n  content: '';\n  display: block;\n  width: 23px;\n  height: 1px;\n  flex-shrink: 0;\n  background: var(--arc-card-gold);\n}\nselector .arc-card-title .elementor-heading-title {\n  display: -webkit-box;\n  -webkit-box-orient: vertical;\n  -webkit-line-clamp: 2;\n  overflow: hidden;\n  overflow-wrap: anywhere;\n  margin: 0;\n  color: var(--arc-card-green);\n  font-family: 'Playfair Display', Georgia, serif;\n  font-size: 25px;\n  font-weight: 600;\n  line-height: 1.24;\n  letter-spacing: -.45px;\n}\nselector .arc-card-title a { color: inherit; text-decoration: none; }\nselector .arc-card-title a:hover { color: #806237; }\nselector .arc-card-description .elementor-heading-title {\n  display: -webkit-box;\n  -webkit-box-orient: vertical;\n  -webkit-line-clamp: 2;\n  overflow: hidden;\n  margin: 0;\n  color: var(--arc-card-muted);\n  font-family: Inter, Arial, sans-serif;\n  font-size: 13px;\n  font-weight: 400;\n  line-height: 1.7;\n}\nselector .arc-card-description:has(.elementor-heading-title:empty) { display: none; }\nselector .arc-card-capacity .elementor-icon-list-items {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px 16px;\n  margin: 0;\n  padding: 0;\n}\nselector .arc-card-capacity .elementor-icon-list-item { margin: 0; padding: 0; }\nselector .arc-card-capacity .elementor-icon-list-text {\n  color: #4e5952;\n  padding-inline-start: 7px;\n  font-family: Inter, Arial, sans-serif;\n  font-size: 12px;\n  line-height: 1.6;\n  font-weight: 500;\n}\nselector .arc-card-capacity .elementor-icon-list-icon {\n  display: inline-flex;\n  align-items: center;\n  width: auto;\n  color: #806237;\n}\nselector .arc-card-capacity .elementor-icon-list-icon i { color: #806237; font-size: 12px; }\nselector .arc-card-capacity .elementor-icon-list-icon svg { fill: #806237; width: 12px; height: 12px; }\nselector .arc-card-amenities .arc-room-amenities-section { margin: 0; padding: 0; }\nselector .arc-card-amenities .arc-amenities-grid {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\nselector .arc-card-amenities .arc-amenities-grid li {\n  display: block;\n  flex: 0 1 auto;\n  min-width: 0;\n  margin: 0;\n  padding: 5px 8px;\n  border: 1px solid #e9ebe4;\n  background: #f8f8f4;\n  color: #586057;\n  font-family: Inter, Arial, sans-serif;\n  font-size: 10px;\n  font-weight: 400;\n  line-height: 1.45;\n  overflow-wrap: anywhere;\n}\nselector .arc-card-amenities .arc-amenities-grid li:nth-child(n+4) { display: none; }\nselector .arc-card-amenities:has(.elementor-shortcode:empty) { display: none; }\nselector .arc-card-footer {\n  display: block;\n  width: calc(100% - 46px);\n  margin: auto 23px 23px;\n  padding: 19px 0 0;\n  border-top: 1px solid #e8eae3;\n}\nselector .arc-card-footer > .elementor-container {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  width: 100%;\n  gap: 12px;\n  max-width: none;\n  margin: 0;\n}\nselector .arc-card-price-column, selector .arc-card-cta-column {\n  width: auto;\n  max-width: 100%;\n  min-width: 0;\n  flex: 0 1 auto;\n}\nselector .arc-card-footer .elementor-widget-wrap {\n  display: block;\n  width: 100%;\n  padding: 0;\n}\nselector .arc-card-price, selector .arc-card-cta { width: auto; max-width: 100%; }\nselector .arc-card-price .arc-room-meta-pills { display: block; margin: 0; padding: 0; }\nselector .arc-card-price .arc-pill:not(.arc-pill-price) { display: none; }\nselector .arc-card-price .arc-pill-price {\n  display: inline-flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 1px;\n  margin: 0;\n  padding: 0;\n  border: 0;\n  background: transparent;\n  color: var(--arc-card-muted);\n  font-family: Inter, Arial, sans-serif;\n  font-size: 10px;\n  font-weight: 400;\n  line-height: 1.45;\n}\nselector .arc-card-price .arc-pill-price strong {\n  color: var(--arc-card-green);\n  font-family: 'Playfair Display', Georgia, serif;\n  font-size: 24px;\n  font-weight: 600;\n  letter-spacing: -.6px;\n  line-height: 1.25;\n  overflow-wrap: anywhere;\n}\nselector .arc-card-cta .elementor-button {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  padding: 13px 15px;\n  border: 1px solid var(--arc-card-green);\n  border-radius: 0 !important;\n  background: var(--arc-card-green);\n  color: #ffffff;\n  font-family: Inter, Arial, sans-serif;\n  font-size: 11px;\n  font-weight: 500;\n  line-height: 1.3;\n  letter-spacing: .2px;\n  text-decoration: none;\n  box-shadow: none;\n  transition: background-color .2s ease, border-color .2s ease, color .2s ease;\n}\nselector .arc-card-cta .elementor-button-content-wrapper {\n  display: flex;\n  flex-direction: row-reverse;\n  align-items: center;\n  gap: 10px;\n}\nselector .arc-card-cta .elementor-button-icon { display: inline-flex; margin: 0; }\nselector .arc-card-cta .elementor-button-icon svg { width: 12px; height: 12px; fill: currentColor; }\nselector .arc-card-cta .elementor-button:hover,\nselector .arc-card-cta .elementor-button:focus-visible {\n  border-color: var(--arc-card-gold);\n  background: var(--arc-card-gold);\n  color: var(--arc-card-green);\n}\nselector a:focus-visible { outline: 2px solid #806237; outline-offset: -3px; }\nselector .arc-card-cta a:focus-visible { outline: 2px solid #17332b; outline-offset: 3px; }\n@media (max-width: 767px) {\n  selector .arc-card-body { padding: 19px 19px 11px; }\n  selector .arc-card-content > .elementor-widget-wrap { gap: 11px; }\n  selector .arc-card-title .elementor-heading-title { font-size: 24px; }\n  selector .arc-card-footer { width: calc(100% - 38px); margin: auto 19px 19px; padding-top: 17px; }\n}\n@media (prefers-reduced-motion: reduce) {\n  selector, selector .arc-card-image img, selector .elementor-button { transition: none; }\n  selector:hover .arc-card-image img { transform: none; }\n}\n"
+      },
+      "elements": [
+        {
+          "id": "a1c1012",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null,
+            "space_between_widgets": 0,
+            "css_classes": "arc-card-shell",
+            "padding": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            },
+            "margin": {
+              "unit": "px",
+              "top": "0",
+              "right": "0",
+              "bottom": "0",
+              "left": "0",
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "a1c1002",
+              "elType": "widget",
+              "widgetType": "image",
+              "settings": {
+                "_css_classes": "arc-card-image",
+                "_margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "_padding": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "image": {
+                  "url": "",
+                  "id": ""
+                },
+                "image_size": "large",
+                "align": "center",
+                "width": {
+                  "unit": "%",
+                  "size": 100,
+                  "sizes": []
+                },
+                "object-fit": "cover",
+                "link_to": "custom",
+                "link": {
+                  "url": "",
+                  "is_external": "",
+                  "nofollow": ""
+                },
+                "image_border_radius": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "__dynamic__": {
+                  "image": "[elementor-tag id=\"d1c1001\" name=\"post-featured-image\" settings=\"%7B%7D\"]",
+                  "link": "[elementor-tag id=\"d1c1002\" name=\"post-url\" settings=\"%7B%7D\"]"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "a1c1003",
+              "elType": "section",
+              "isInner": true,
+              "settings": {
+                "layout": "full_width",
+                "gap": "no",
+                "stretch_section": "",
+                "padding": {
+                  "unit": "px",
+                  "top": "23",
+                  "right": "23",
+                  "bottom": "12",
+                  "left": "23",
+                  "isLinked": false
+                },
+                "margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "border_radius": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "css_classes": "arc-card-body",
+                "padding_mobile": {
+                  "unit": "px",
+                  "top": "19",
+                  "right": "19",
+                  "bottom": "11",
+                  "left": "19",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "a1c1013",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 100,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-card-content",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "a1c1004",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "_css_classes": "arc-card-eyebrow",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "title": "ROOMS & SUITES",
+                        "header_size": "span",
+                        "title_color": "#806237",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Inter",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 10,
+                          "sizes": []
+                        },
+                        "typography_font_weight": "600",
+                        "typography_line_height": {
+                          "unit": "em",
+                          "size": 1.5,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "px",
+                          "size": 2,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "a1c1005",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "_css_classes": "arc-card-title",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "title": "",
+                        "header_size": "h3",
+                        "title_color": "#17332b",
+                        "link": {
+                          "url": "",
+                          "is_external": "",
+                          "nofollow": ""
+                        },
+                        "typography_typography": "custom",
+                        "typography_font_family": "Playfair Display",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 25,
+                          "sizes": []
+                        },
+                        "typography_font_weight": "600",
+                        "typography_line_height": {
+                          "unit": "em",
+                          "size": 1.24,
+                          "sizes": []
+                        },
+                        "typography_font_size_mobile": {
+                          "unit": "px",
+                          "size": 24,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "px",
+                          "size": -0.45,
+                          "sizes": []
+                        },
+                        "__dynamic__": {
+                          "title": "[elementor-tag id=\"d1c1003\" name=\"post-title\" settings=\"%7B%7D\"]",
+                          "link": "[elementor-tag id=\"d1c1004\" name=\"post-url\" settings=\"%7B%7D\"]"
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "a1c1006",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "_css_classes": "arc-card-description",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "title": "",
+                        "header_size": "div",
+                        "title_color": "#656a65",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Inter",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 13,
+                          "sizes": []
+                        },
+                        "typography_font_weight": "400",
+                        "typography_line_height": {
+                          "unit": "em",
+                          "size": 1.7,
+                          "sizes": []
+                        },
+                        "__dynamic__": {
+                          "title": "[elementor-tag id=\"d1c1005\" name=\"post-excerpt\" settings=\"%7B%22max_length%22%3A18%2C%22apply_to_post_content%22%3A%22yes%22%7D\"]"
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "a1c1007",
+                      "elType": "widget",
+                      "widgetType": "icon-list",
+                      "settings": {
+                        "_css_classes": "arc-card-capacity",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "view": "inline",
+                        "space_between": {
+                          "unit": "px",
+                          "size": 16,
+                          "sizes": []
+                        },
+                        "icon_color": "#806237",
+                        "icon_size": {
+                          "unit": "px",
+                          "size": 12,
+                          "sizes": []
+                        },
+                        "text_color": "#4e5952",
+                        "text_indent": {
+                          "unit": "px",
+                          "size": 7,
+                          "sizes": []
+                        },
+                        "icon_typography_typography": "custom",
+                        "icon_typography_font_family": "Inter",
+                        "icon_typography_font_size": {
+                          "unit": "px",
+                          "size": 12,
+                          "sizes": []
+                        },
+                        "icon_typography_font_weight": "500",
+                        "icon_typography_line_height": {
+                          "unit": "em",
+                          "size": 1.6,
+                          "sizes": []
+                        },
+                        "icon_list": [
+                          {
+                            "_id": "b1c1001",
+                            "text": "",
+                            "selected_icon": {
+                              "value": "fas fa-user",
+                              "library": "fa-solid"
+                            },
+                            "__dynamic__": {
+                              "text": "[elementor-tag id=\"d1c1006\" name=\"post-custom-field\" settings=\"%7B%22key%22%3A%22%22%2C%22custom_key%22%3A%22_arc_max_adults%22%2C%22after%22%3A%22+Adults%22%7D\"]"
+                            }
+                          },
+                          {
+                            "_id": "b1c1002",
+                            "text": "",
+                            "selected_icon": {
+                              "value": "fas fa-child",
+                              "library": "fa-solid"
+                            },
+                            "__dynamic__": {
+                              "text": "[elementor-tag id=\"d1c1007\" name=\"post-custom-field\" settings=\"%7B%22key%22%3A%22%22%2C%22custom_key%22%3A%22_arc_max_children%22%2C%22after%22%3A%22+Children%22%2C%22fallback%22%3A%220+Children%22%7D\"]"
+                            }
+                          }
+                        ]
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "a1c1008",
+                      "elType": "widget",
+                      "widgetType": "shortcode",
+                      "settings": {
+                        "_css_classes": "arc-card-amenities",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "shortcode": "[arc_room_amenities]"
+                      },
+                      "elements": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "a1c1009",
+              "elType": "section",
+              "isInner": true,
+              "settings": {
+                "layout": "full_width",
+                "gap": "no",
+                "stretch_section": "",
+                "padding": {
+                  "unit": "px",
+                  "top": "19",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": false
+                },
+                "margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "border_radius": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "0",
+                  "bottom": "0",
+                  "left": "0",
+                  "isLinked": true
+                },
+                "css_classes": "arc-card-footer"
+              },
+              "elements": [
+                {
+                  "id": "a1c1014",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 60,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-card-price-column",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "a1c1010",
+                      "elType": "widget",
+                      "widgetType": "shortcode",
+                      "settings": {
+                        "_css_classes": "arc-card-price",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "shortcode": "[arc_room_meta]"
+                      },
+                      "elements": []
+                    }
+                  ]
+                },
+                {
+                  "id": "a1c1015",
+                  "elType": "column",
+                  "isInner": true,
+                  "settings": {
+                    "_column_size": 40,
+                    "_inline_size": null,
+                    "space_between_widgets": 0,
+                    "css_classes": "arc-card-cta-column",
+                    "padding": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    },
+                    "margin": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "a1c1011",
+                      "elType": "widget",
+                      "widgetType": "button",
+                      "settings": {
+                        "_css_classes": "arc-card-cta",
+                        "_margin": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "_padding": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "text": "View Room",
+                        "size": "sm",
+                        "align": "right",
+                        "button_type": "",
+                        "link": {
+                          "url": "",
+                          "is_external": "",
+                          "nofollow": ""
+                        },
+                        "selected_icon": {
+                          "value": "fas fa-arrow-right",
+                          "library": "fa-solid"
+                        },
+                        "icon_align": "row-reverse",
+                        "icon_indent": {
+                          "unit": "px",
+                          "size": 10,
+                          "sizes": []
+                        },
+                        "button_text_color": "#ffffff",
+                        "background_background": "classic",
+                        "background_color": "#17332b",
+                        "hover_color": "#17332b",
+                        "button_background_hover_background": "classic",
+                        "button_background_hover_color": "#c19d60",
+                        "border_radius": {
+                          "unit": "px",
+                          "top": "0",
+                          "right": "0",
+                          "bottom": "0",
+                          "left": "0",
+                          "isLinked": true
+                        },
+                        "text_padding": {
+                          "unit": "px",
+                          "top": "13",
+                          "right": "15",
+                          "bottom": "13",
+                          "left": "15",
+                          "isLinked": false
+                        },
+                        "typography_typography": "custom",
+                        "typography_font_family": "Inter",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 11,
+                          "sizes": []
+                        },
+                        "typography_font_weight": "500",
+                        "typography_line_height": {
+                          "unit": "em",
+                          "size": 1.3,
+                          "sizes": []
+                        },
+                        "__dynamic__": {
+                          "link": "[elementor-tag id=\"d1c1008\" name=\"post-url\" settings=\"%7B%7D\"]"
+                        }
+                      },
+                      "elements": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "source": "post",
+    "preview_type": "single/arc_room",
+    "preview_width": {
+      "unit": "px",
+      "size": 390,
+      "sizes": []
+    }
+  },
+  "version": "0.4",
+  "title": "Aristocrats - Room Card (Full Width Loop Item)",
+  "type": "loop-item"
+}

@@ -41,7 +41,7 @@ class Order_Meta_Box {
 
 		add_meta_box(
 			'arc_hotel_booking_meta',
-			__( 'ASP.NET Hotel Reservation Details', 'arc-hotel-core' ),
+			__( 'Hotel Reservation Details', 'arc-hotel-core' ),
 			[ $this, 'render' ],
 			$screen,
 			'side',
@@ -93,7 +93,7 @@ class Order_Meta_Box {
 						<td><strong><?php echo esc_html( $booking_no ?: 'Pending Sync' ); ?></strong></td>
 					</tr>
 					<tr>
-						<td><strong><?php esc_html_e( 'API Booking ID:', 'arc-hotel-core' ); ?></strong></td>
+						<td><strong><?php esc_html_e( 'Reservation ID:', 'arc-hotel-core' ); ?></strong></td>
 						<td><code><?php echo esc_html( $booking_id ?: 'N/A' ); ?></code></td>
 					</tr>
 					<tr>
@@ -123,6 +123,10 @@ class Order_Meta_Box {
 						<td><?php echo esc_html( $bed_type . ' | ' . $arrival ); ?></td>
 					</tr>
 				</tbody>
+				<tbody>
+					<tr><td>Additional guests</td><td><?php echo esc_html( implode( ', ', (array) $order->get_meta( '_arc_guests' ) ) ); ?></td></tr>
+					<tr><td>Requests</td><td><?php echo esc_html( implode( '; ', (array) $order->get_meta( '_arc_requests' ) ) ); ?></td></tr>
+				</tbody>
 			</table>
 
 			<?php if ( ! empty( $last_error ) && 'synced' !== $sync_status ) : ?>
@@ -132,10 +136,13 @@ class Order_Meta_Box {
 				</div>
 			<?php endif; ?>
 
-			<?php if ( 'synced' !== $sync_status ) : ?>
+			<?php if ( 'synced' !== $sync_status && empty( $booking_no ) && empty( $booking_id ) ) : ?>
 				<div style="margin-top: 15px;">
+					<p><label><input type="checkbox" id="arc-erp-checked" /> <?php esc_html_e( 'I checked the hotel ERP for this order and verified its reservation status.', 'arc-hotel-core' ); ?></label></p>
+					<p><label><?php esc_html_e( 'Existing ERP booking number (if found)', 'arc-hotel-core' ); ?><input type="text" id="arc-existing-reference" style="width:100%" /></label></p>
+					<p><?php esc_html_e( 'Enter the existing reference to link it. Leave it empty only after confirming that no reservation exists in the ERP.', 'arc-hotel-core' ); ?></p>
 					<button type="button" id="arc-retry-sync-btn" class="button button-primary" style="width: 100%;" onclick="arcRetrySync(<?php echo esc_attr( $order_id ); ?>);">
-						<?php esc_html_e( 'Retry API Sync Now', 'arc-hotel-core' ); ?>
+						<?php esc_html_e( 'Link or Retry After ERP Check', 'arc-hotel-core' ); ?>
 					</button>
 				</div>
 			<?php endif; ?>
@@ -155,12 +162,15 @@ class Order_Meta_Box {
 		}
 
 		function arcRetrySync(orderId) {
+			if (!jQuery('#arc-erp-checked').is(':checked')) { alert('Please check the hotel ERP first.'); return; }
 			var btn = jQuery('#arc-retry-sync-btn');
-			btn.prop('disabled', true).text('<?php echo esc_js( __( 'Syncing with API...', 'arc-hotel-core' ) ); ?>');
+			btn.prop('disabled', true).text('<?php echo esc_js( __( 'Synchronizing reservation...', 'arc-hotel-core' ) ); ?>');
 
 			jQuery.post(ajaxurl, {
 				action: 'arc_manual_retry_sync',
 				order_id: orderId,
+				safety_confirmed: '1',
+				booking_reference: jQuery('#arc-existing-reference').val(),
 				nonce: '<?php echo esc_js( wp_create_nonce( 'arc_retry_sync_nonce' ) ); ?>'
 			}, function(response) {
 				if (response.success) {
@@ -168,7 +178,7 @@ class Order_Meta_Box {
 					location.reload();
 				} else {
 					alert(response.data ? response.data.message : '<?php echo esc_js( __( 'Sync failed.', 'arc-hotel-core' ) ); ?>');
-					btn.prop('disabled', false).text('<?php echo esc_js( __( 'Retry API Sync Now', 'arc-hotel-core' ) ); ?>');
+					btn.prop('disabled', false).text('<?php echo esc_js( __( 'Retry Sync Now', 'arc-hotel-core' ) ); ?>');
 				}
 			});
 		}
@@ -189,13 +199,16 @@ class Order_Meta_Box {
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0;
-		$success  = Reservation_Sync::maybe_sync( $order_id );
+		$reference = isset( $_POST['booking_reference'] ) && is_scalar( $_POST['booking_reference'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['booking_reference'] ) ) ) : '';
+		$checked = isset( $_POST['safety_confirmed'] ) && '1' === $_POST['safety_confirmed'];
+		$success = Reservation_Sync::recover_order( $order_id, $reference, $checked );
 
 		if ( $success ) {
 			wp_send_json_success();
 		} else {
 			$order = wc_get_order( $order_id );
-			$err   = $order ? $order->get_meta( '_arc_sync_last_error' ) : 'Sync failed';
+			$err   = $order ? $order->get_meta( '_arc_sync_last_error' ) : '';
+			$err = $err ?: __( 'No reservation was sent. Verify payment, the ERP reference and booking details before recovery.', 'arc-hotel-core' );
 			wp_send_json_error( [ 'message' => $err ] );
 		}
 	}

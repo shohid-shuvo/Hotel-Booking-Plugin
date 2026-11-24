@@ -4,6 +4,27 @@ All code, comments, and commit messages in **English**.
 Work through phases in order. Do not start a phase until the previous phase's exit criteria pass.
 Each task names the files it touches so the change stays reviewable.
 
+## Website Brand Colors
+
+This is the user-approved palette extracted from the Aristocrats website logo. It supersedes the earlier green/gold and generic blue styling for this website.
+
+| Color role | Value | Use |
+| --- | --- | --- |
+| Primary Navy Blue | `#082465` | Headings, body text, prices, dark gallery surfaces and category badges |
+| Brand Teal / Ocean Blue | `#0A74A6` | Secondary text, links, input borders and focus indicators |
+| Bright Cyan / Aqua | `#1B9EC2` | Decorative accents, gallery selection borders and highlight effects |
+| Signature Amber Orange | `#F48C06` | Primary action backgrounds and price/availability accents |
+| Hover / Deep Orange | `#D97706` | Primary action hover background |
+| Light Tint Background | `#F0F8FB` | Amenities, light panels and subtle highlights |
+
+- `assets/css/hotel-core.css` defines reusable `--arc-brand-*` custom properties. Apply these defaults to new plugin UI and Elementor designs; white surfaces and translucent versions of these brand colors are allowed.
+- Use Navy text on Orange and Hover Orange buttons. Their contrast ratios are approximately **5.93:1** and **4.54:1**. White text on these backgrounds does not meet the 4.5:1 target for normal text.
+- Teal text is suitable on white and Light Tint backgrounds. Cyan is an accent color; do not use it for normal-sized text on these light surfaces.
+- Keep keyboard focus visible. Indicate availability and status with readable text and an accent, rather than relying on color alone. Preserve the meaning of genuine success/error messages when designing future states.
+- Derive borders, shadows and light highlights from the brand RGB tokens. Keep color changes separate from unrelated layout or booking behavior changes.
+- These are this website's defaults, not API room data. Tenant configuration may override the tokens when future white-label support is implemented.
+- Elementor templates can have their own scoped Custom CSS and saved color controls. An already imported template must be updated separately to adopt a new palette.
+
 ---
 
 ## Phase 0 — Baseline and safety net
@@ -299,3 +320,10 @@ Ship only when all of these are true:
 - **Never** retry a write without first checking whether the previous attempt landed.
 - Every new option, transient, table, and cron must be prefixed `arc_` and cleaned up on uninstall.
 - Comments and identifiers in English; user-facing strings wrapped in the `arc-hotel-core` text domain.
+
+## Elementor Pro JSON Architecture Rules (STRICT)
+- **Standard Flexbox Containers ONLY:** When creating sections, wrappers, rows, or grids in any Elementor `.json` template, strictly use standard **Flexbox Container** elements (`"elType": "container"`).
+- **STRICTLY FORBIDDEN Layout Elements:**
+  - NEVER use legacy `"elType": "section"`, `"elType": "column"`, or Inner Section widgets (`"isInner": true` section).
+  - NEVER use Elementor V4 experimental **Atomic Elements / Atomic Widgets** (e.g., `e-flexbox`, `e-div-block`, `e-heading`, `e-image`, `e-button`, or any `atomic` widget types).
+- **Allowed Content Widgets:** Inside `"elType": "container"`, only use classic stable Elementor widgets (`heading`, `text-editor`, `button`, `image`, `icon-list`, `icon-box`, `divider`, `spacer`, `shortcode`).

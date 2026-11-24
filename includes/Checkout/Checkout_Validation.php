@@ -8,7 +8,8 @@
 namespace ARC\HotelCore\Checkout;
 
 use ARC\HotelCore\Cart\Cart_Guard;
-use ARC\HotelCore\Api\Api_Client;
+use ARC\HotelCore\Booking\Room_Quote;
+use ARC\HotelCore\Support\Guest_Identity;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,9 +41,24 @@ class Checkout_Validation {
 			return; // Food mode checkout does not require hotel validations
 		}
 
+		if ( Cart_Guard::cart_has_food() ) {
+			$errors->add( 'arc_mixed_cart', __( 'Room reservations and restaurant items require separate orders.', 'arc-hotel-core' ) );
+			return;
+		}
+		if ( function_exists( 'get_woocommerce_currency' ) && 'BDT' !== get_woocommerce_currency() ) {
+			$errors->add( 'arc_currency', __( 'Room booking requires the API currency BDT. Please contact the hotel to correct currency configuration.', 'arc-hotel-core' ) );
+			return;
+		}
+		$room_count = 0;
+		foreach ( WC()->cart->get_cart() as $item ) { if ( ! empty( $item['arc_room'] ) ) { $room_count++; } }
+		if ( $room_count !== 1 ) {
+			$errors->add( 'arc_room_count', __( 'Only one room reservation is allowed per checkout.', 'arc-hotel-core' ) );
+			return;
+		}
+
 		// 1. Validate Mobile Phone (8-15 digits after removing formatting characters)
 		$raw_phone   = $data['billing_phone'] ?? '';
-		$clean_phone = preg_replace( '/[\s\+\-\(\)]/', '', $raw_phone );
+		$clean_phone = Guest_Identity::normalize_phone( (string) $raw_phone );
 		if ( ! preg_match( '/^\d{8,15}$/', $clean_phone ) ) {
 			$errors->add( 'arc_invalid_phone', __( 'Please provide a valid mobile number (8 to 15 digits).', 'arc-hotel-core' ) );
 		}
@@ -64,7 +80,7 @@ class Checkout_Validation {
 		$room_item = null;
 		foreach ( WC()->cart->get_cart() as $item ) {
 			if ( ! empty( $item['arc_room'] ) ) {
-				$room_item = $item['arc_room'];
+				$room_item = Room_Quote::normalize_booking( $item['arc_room'] );
 				break;
 			}
 		}
@@ -85,65 +101,41 @@ class Checkout_Validation {
 				}
 			}
 
-			// 4. Pre-Payment Real-Time Overlap Verification (Anti-Double-Booking Guard)
-			$client = new Api_Client();
-			$api_res = $client->get(
-				'api/v1/public-booking/available-rooms',
-				[
-					'checkIn'    => $room_item['check_in'] . 'T14:00:00',
-					'checkOut'   => $room_item['check_out'] . 'T12:00:00',
-					'roomTypeId' => $room_item['room_type_id'],
-					'adults'     => $room_item['adults'],
-				],
-				[ 'use_cache' => false ]
-			);
-
-			if ( ! $api_res->ok() ) {
-				$errors->add( 'arc_api_check_failed', $api_res->message() );
+			$lock = 'room_' . \ARC\HotelCore\Settings\Settings::get( 'company_code' ) . '_' . (int) ( $room_item['api_room_id'] ?? 0 );
+			if ( ( $room_item['company_code'] ?? '' ) !== \ARC\HotelCore\Settings\Settings::get( 'company_code' ) ) {
+				$errors->add( 'arc_session_tenant', __( 'Your hotel booking session expired. Please select your room and dates again.', 'arc-hotel-core' ) );
 				return;
 			}
-
-			$available_rooms = $api_res->data();
-			if ( empty( $available_rooms ) || ! is_array( $available_rooms ) ) {
-				$errors->add(
-					'arc_room_taken',
-					__( 'We apologize, but this room was just reserved by another guest or receptionist. Your payment has not been processed. Please select another room.', 'arc-hotel-core' )
-				);
+			if ( empty( $room_item['api_room_id'] ) || ! \ARC\HotelCore\Support\Database_Lock::acquire( $lock ) ) {
+				$errors->add( 'arc_verification_busy', __( 'Room verification is temporarily unavailable. Please try again before payment.', 'arc-hotel-core' ) );
 				return;
 			}
-
-			// Verify that the requested room type is still free
-			$is_still_available = false;
-			$latest_total_price = 0.0;
-			foreach ( $available_rooms as $ar ) {
-				if ( (int) $ar['roomTypeId'] === (int) $room_item['room_type_id'] ) {
-					$is_still_available = true;
-					$latest_total_price = (float) ( $ar['totalPrice'] ?? 0 );
-					break;
+			try {
+			$result = Room_Quote::search( (string) ( $room_item['check_in'] ?? '' ), (string) ( $room_item['check_out'] ?? '' ), (int) ( $room_item['adults'] ?? 0 ), (int) ( $room_item['children'] ?? 0 ), (int) ( $room_item['room_type_id'] ?? 0 ) );
+			if ( ! $result->ok() ) {
+				$errors->add( 'arc_api_check_failed', $result->message() );
+				return;
+			}
+			$room = Room_Quote::select( $result->data(), (int) ( $room_item['room_type_id'] ?? 0 ), (int) ( $room_item['api_room_id'] ?? 0 ) );
+			if ( ! $room ) {
+				$errors->add( 'arc_room_unavailable', __( 'The selected room is unavailable for these dates and guest counts. Please select another room.', 'arc-hotel-core' ) );
+				return;
+			}
+			$total = (float) ( $room_item['total_price'] ?? 0 );
+			if ( abs( (float) $room['totalPrice'] - $total ) > 0.01 ) {
+				$errors->add( 'arc_price_changed', __( 'The room price changed. Please select your room again to accept the current rate.', 'arc-hotel-core' ) );
+			}
+			foreach ( WC()->cart->get_cart() as $item ) {
+				if ( ! empty( $item['arc_room'] ) && isset( $item['line_total'] ) && abs( (float) $item['line_total'] - $total ) > 0.01 ) {
+					$errors->add( 'arc_room_discount', __( 'This coupon changes the API room fare. Remove the coupon before completing your room reservation.', 'arc-hotel-core' ) );
 				}
 			}
-
-			if ( ! $is_still_available ) {
-				$errors->add(
-					'arc_room_unavailable',
-					__( 'This room category has just become fully booked. Please select different dates or a different suite.', 'arc-hotel-core' )
-				);
-				return;
+			if ( ! function_exists( 'arc_cfg' ) && empty( $_POST['arc_terms'] ) ) {
+				$errors->add( 'arc_terms', __( 'Please accept the hotel terms before booking.', 'arc-hotel-core' ) );
 			}
-
-			// Price authority verification
-			$cart_price = (float) ( $room_item['total_price'] ?? 0 );
-			if ( abs( $latest_total_price - $cart_price ) > 0.01 ) {
-				$errors->add(
-					'arc_price_changed',
-					sprintf(
-						/* translators: 1: New price, 2: Old price */
-						__( 'The room rate has changed to %1$s BDT (was %2$s BDT). Please refresh the page to accept the updated fare.', 'arc-hotel-core' ),
-						number_format( $latest_total_price ),
-						number_format( $cart_price )
-					)
-				);
-			}
+			} finally { \ARC\HotelCore\Support\Database_Lock::release( $lock ); }
+		} else {
+			$errors->add( 'arc_missing_booking', __( 'Your booking session is incomplete. Please select your room again.', 'arc-hotel-core' ) );
 		}
 	}
 }

@@ -21,6 +21,7 @@ use ARC\HotelCore\Admin\Orders_Columns;
 use ARC\HotelCore\Track\Track_Controller;
 use ARC\HotelCore\Elementor\Shortcodes;
 use ARC\HotelCore\Elementor\Elementor_Init;
+use ARC\HotelCore\Elementor\Room_Booking_Form;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -65,6 +66,8 @@ class Plugin {
 	 */
 	protected function init_hooks(): void {
 		add_action( 'init', [ $this, 'load_textdomain' ] );
+		add_action( 'init', [ '\\ARC\\HotelCore\\Support\\Scheduler', 'ensure' ] );
+		add_action( 'init', [ $this, 'upgrade' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_scripts' ] );
 		add_action( 'arc_daily_log_purge', [ $this, 'purge_logs' ] );
 		add_action( 'admin_notices', [ $this, 'check_environment_notices' ] );
@@ -108,7 +111,9 @@ class Plugin {
 			'arc-hotel-search-js',
 			'arcSearchSettings',
 			[
-				'maxStay' => \ARC\HotelCore\Settings\Settings::get( 'max_stay_nights', 30 ),
+				'maxStay'    => \ARC\HotelCore\Settings\Settings::get( 'max_stay_nights', 30 ),
+				'isLoggedIn' => is_user_logged_in(),
+				'restUrl'    => esc_url_raw( rest_url( 'arc/v1/fresh-nonces' ) ),
 			]
 		);
 	}
@@ -125,10 +130,13 @@ class Plugin {
 
 		// Shortcodes & Elementor
 		( new Shortcodes() )->init();
+		Room_Booking_Form::init();
+		\ARC\HotelCore\Elementor\Room_Meta_Shortcodes::init();
 		if ( did_action( 'elementor/loaded' ) || class_exists( '\Elementor\Plugin' ) ) {
 			( new Elementor_Init() )->init();
 		}
 
+		if ( class_exists( 'WooCommerce' ) ) {
 		// Cart Guard & Price Authority
 		( new Cart_Guard() )->init();
 
@@ -152,13 +160,25 @@ class Plugin {
 		// Track & Cancel Controller
 		( new Track_Controller() )->init();
 
+		}
+
 		// Admin Order Screens & Settings
 		if ( is_admin() ) {
 			( new Settings_Page() )->init();
-			( new Order_Meta_Box() )->init();
-			( new Orders_Columns() )->init();
+			if ( class_exists( 'WooCommerce' ) ) {
+				( new Order_Meta_Box() )->init();
+				( new Orders_Columns() )->init();
+			}
 			( new \ARC\HotelCore\Admin\Log_Page() )->init();
 			( new \ARC\HotelCore\Admin\Notices() )->init();
+		}
+	}
+
+	/** Install privacy/log migrations on an in-place update, without touching orders. */
+	public function upgrade(): void {
+		if ( get_option( 'arc_plugin_version' ) !== ARC_VERSION ) {
+			Api_Logger::install_table();
+			update_option( 'arc_plugin_version', ARC_VERSION, false );
 		}
 	}
 
@@ -168,6 +188,9 @@ class Plugin {
 	 * @return void
 	 */
 	public static function activate(): void {
+		$room_type = new Room_Post_Type();
+		$room_type->register_post_type();
+		$room_type->register_taxonomy();
 		// 1. Install API Log Table
 		Api_Logger::install_table();
 
@@ -180,6 +203,8 @@ class Plugin {
 		if ( ! wp_next_scheduled( 'arc_daily_reconcile' ) ) {
 			wp_schedule_event( time(), 'daily', 'arc_daily_reconcile' );
 		}
+
+		\ARC\HotelCore\Support\Scheduler::ensure();
 
 		// 3. Ensure WooCommerce virtual room product container exists
 		self::ensure_room_container_product();
@@ -199,16 +224,7 @@ class Plugin {
 	 * @return void
 	 */
 	public static function deactivate(): void {
-		// Clear scheduled cron events
-		$timestamp = wp_next_scheduled( 'arc_daily_log_purge' );
-		if ( $timestamp ) {
-			wp_unschedule_event( $timestamp, 'arc_daily_log_purge' );
-		}
-
-		$rec_timestamp = wp_next_scheduled( 'arc_daily_reconcile' );
-		if ( $rec_timestamp ) {
-			wp_unschedule_event( $rec_timestamp, 'arc_daily_reconcile' );
-		}
+		\ARC\HotelCore\Support\Scheduler::clear();
 
 		flush_rewrite_rules();
 	}
@@ -220,6 +236,7 @@ class Plugin {
 	 */
 	public function purge_logs(): void {
 		Api_Logger::purge_old_logs( 30 );
+		update_option( 'arc_cron_last_run', time(), false );
 	}
 
 	/**

@@ -37,35 +37,27 @@ class Notices {
 			return;
 		}
 
-		// 1. Missing Secret API Key Notice
-		if ( ! Settings::has_api_key() && ! Settings::is_mock_mode() ) {
-			?>
-			<div class="notice notice-warning is-dismissible">
-				<p>
-					<strong><?php esc_html_e( 'Aristocrats Hotel Core Alert:', 'arc-hotel-core' ); ?></strong>
-					<?php esc_html_e( 'The ARC_API_KEY constant is not defined in wp-config.php. Live reservations cannot be transmitted to the ASP.NET API without authorization.', 'arc-hotel-core' ); ?>
-				</p>
-			</div>
-			<?php
-		}
-
-		// 2. Mock Mode Indicator
+		// 1. Mock Mode Indicator (shown only during development/testing)
 		if ( Settings::is_mock_mode() ) {
 			?>
 			<div class="notice notice-info">
 				<p>
-					<strong><?php esc_html_e( 'Hotel Core [Mock Mode Active]:', 'arc-hotel-core' ); ?></strong>
-					<?php esc_html_e( 'API calls are currently returning static test fixtures. Set ARC_API_MOCK = false in wp-config.php to connect to live hotel servers.', 'arc-hotel-core' ); ?>
+					<strong><?php esc_html_e( 'Hotel Core [Test Mode Active]:', 'arc-hotel-core' ); ?></strong>
+					<?php esc_html_e( 'The system is currently operating in offline test mode using local fixtures.', 'arc-hotel-core' ); ?>
 				</p>
 			</div>
 			<?php
 		}
 
+		if ( '' === Settings::get( 'company_code' ) ) {
+			echo '<div class="notice notice-error"><p>' . esc_html__( 'Configure your hotel Company Code in Hotel Settings before accepting bookings.', 'arc-hotel-core' ) . '</p></div>';
+		}
+		if ( ! function_exists( 'wc_get_orders' ) ) { return; }
+
 		// 3. Failed or Conflict Reservations Needing Action
-		$failed_orders = wc_get_orders( [
+		$failed_orders = \ARC\HotelCore\Support\Order_Query::get_orders( [
 			'limit'      => 5,
-			'meta_key'   => '_arc_sync_status',
-			'meta_value' => [ 'failed', 'manual' ],
+			'meta_query' => [ [ 'key' => '_arc_sync_status', 'value' => [ 'failed', 'manual', 'unknown', 'sending' ], 'compare' => 'IN' ] ],
 		] );
 
 		if ( ! empty( $failed_orders ) ) {
@@ -96,7 +88,7 @@ class Notices {
 			<?php
 		}
 
-		// 4. Past-Due Action Scheduler Warning (Cron not running)
+		// 4. Past-Due WP-Cron Warning (Cron not running)
 		$as_metrics = Action_Scheduler_Status::get_metrics();
 		if ( ! empty( $as_metrics['past_due'] ) && $as_metrics['past_due'] > 0 ) {
 			?>
@@ -106,7 +98,7 @@ class Notices {
 					<?php
 					printf(
 						/* translators: %d: Number of overdue tasks */
-						esc_html__( 'There are %d background hotel tasks past due in Action Scheduler. This indicates that WordPress Cron / Server Cron is not executing. Please configure system crontab to trigger wp-cron.php.', 'arc-hotel-core' ),
+						esc_html__( 'There are %d background hotel tasks overdue in WP-Cron. Check WordPress Cron / Server Cron execution. Please configure system crontab to trigger wp-cron.php.', 'arc-hotel-core' ),
 						absint( $as_metrics['past_due'] )
 					);
 					?>

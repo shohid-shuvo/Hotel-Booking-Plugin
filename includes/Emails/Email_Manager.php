@@ -24,6 +24,7 @@ class Email_Manager {
 	 * @return void
 	 */
 	public function init(): void {
+		add_action( 'arc_reservation_confirmed', [ $this, 'send_confirmed_email' ], 10, 1 );
 		// Inject hotel voucher details into customer and admin WooCommerce emails
 		add_action( 'woocommerce_email_order_details', [ $this, 'attach_hotel_details_to_email' ], 25, 4 );
 	}
@@ -50,6 +51,9 @@ class Email_Manager {
 		$bed_type     = $order->get_meta( '_arc_bed_type' );
 		$arrival      = $order->get_meta( '_arc_arrival' );
 		$policy       = Settings::get( 'cancellation_policy_text' );
+		$profile = Settings::get_hotel_info();
+		$checkin_time = $profile['standardCheckInTime'] ?? '14:00';
+		$checkout_time = $profile['standardCheckOutTime'] ?? '12:00';
 
 		if ( $plain_text ) {
 			echo "\n========================================\n";
@@ -62,7 +66,11 @@ class Email_Manager {
 			echo "Dates: " . ( $booking_info['check_in'] ?? '' ) . " to " . ( $booking_info['check_out'] ?? '' ) . " (" . ( $booking_info['nights'] ?? 1 ) . " nights)\n";
 			echo "Guests: " . ( $booking_info['adults'] ?? 1 ) . " Adults, " . ( $booking_info['children'] ?? 0 ) . " Children\n";
 			echo "Guest ID: " . $masked_id . "\n";
-			echo "Check-in Time: From 14:00 | Check-out: Until 12:00\n";
+			echo "Check-in: " . $checkin_time . " | Check-out: " . $checkout_time . "\n";
+			foreach ( [ '_arc_api_total_amount'=>'Room total', '_arc_api_paid_amount'=>'Paid', '_arc_api_due_amount'=>'Due' ] as $meta=>$label ) {
+				$value = $order->get_meta( $meta );
+				if ( '' !== $value ) { echo $label . ': ' . Settings::format_price( (float) $value ) . "\n"; }
+			}
 			if ( ! empty( $bed_type ) ) {
 				echo "Bed Preference: " . $bed_type . "\n";
 			}
@@ -106,7 +114,7 @@ class Email_Manager {
 				</tr>
 				<tr>
 					<td style="padding: 6px 0;"><strong><?php esc_html_e( 'Standard Times:', 'arc-hotel-core' ); ?></strong></td>
-					<td style="padding: 6px 0;"><?php esc_html_e( 'Check-in from 14:00 | Check-out until 12:00', 'arc-hotel-core' ); ?></td>
+					<td style="padding: 6px 0;"><?php echo esc_html( sprintf( 'Check-in: %s | Check-out: %s', $checkin_time, $checkout_time ) ); ?></td>
 				</tr>
 				<?php if ( ! empty( $bed_type ) ) : ?>
 					<tr>
@@ -120,6 +128,9 @@ class Email_Manager {
 						<td style="padding: 6px 0;"><?php echo esc_html( $arrival ); ?></td>
 					</tr>
 				<?php endif; ?>
+				<?php foreach ( [ '_arc_api_total_amount'=>'Room total', '_arc_api_paid_amount'=>'Paid', '_arc_api_due_amount'=>'Due' ] as $meta=>$label ) : $value = $order->get_meta( $meta ); if ( '' === $value ) { continue; } ?>
+				<tr><td><strong><?php echo esc_html( $label ); ?></strong></td><td><?php echo esc_html( Settings::format_price( (float) $value ) ); ?></td></tr>
+				<?php endforeach; ?>
 			</table>
 
 			<?php if ( ! empty( $policy ) ) : ?>
@@ -129,6 +140,19 @@ class Email_Manager {
 			<?php endif; ?>
 		</div>
 		<?php
+	}
+
+	/** Send a separate official voucher once the API reference is durable. */
+	public function send_confirmed_email( int $order_id ): void {
+		$order = wc_get_order( $order_id );
+		if ( ! $order || 'synced' !== $order->get_meta( '_arc_sync_status' ) || $order->get_meta( '_arc_confirmation_email_sent' ) || ! $order->get_billing_email() ) { return; }
+		ob_start();
+		$this->attach_hotel_details_to_email( $order, false, false, null );
+		$html = ob_get_clean();
+		if ( wp_mail( $order->get_billing_email(), __( 'Your official hotel reservation confirmation', 'arc-hotel-core' ), $html, [ 'Content-Type: text/html; charset=UTF-8' ] ) ) {
+			$order->update_meta_data( '_arc_confirmation_email_sent', time() );
+			$order->save();
+		}
 	}
 
 	/**
@@ -164,7 +188,7 @@ class Email_Manager {
 
 		$message = sprintf(
 			"Attention Hotel Management,\n\n" .
-			"An online hotel room booking in WooCommerce encountered a synchronization issue with the ASP.NET Smart Hotel API.\n\n" .
+			"An online hotel room booking in WooCommerce encountered a synchronization issue with the central Hotel Management System.\n\n" .
 			"Order ID: #%d\n" .
 			"Customer: %s\n" .
 			"Phone: %s\n" .

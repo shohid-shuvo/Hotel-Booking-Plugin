@@ -42,11 +42,11 @@ class Orders_Columns {
 		foreach ( $columns as $key => $column ) {
 			$new_columns[ $key ] = $column;
 			if ( 'order_status' === $key ) {
-				$new_columns['arc_booking_type'] = __( 'Type / API Sync', 'arc-hotel-core' );
+				$new_columns['arc_booking_type'] = __( 'Type / Sync Status', 'arc-hotel-core' );
 			}
 		}
 		if ( ! isset( $new_columns['arc_booking_type'] ) ) {
-			$new_columns['arc_booking_type'] = __( 'Type / API Sync', 'arc-hotel-core' );
+			$new_columns['arc_booking_type'] = __( 'Type / Sync Status', 'arc-hotel-core' );
 		}
 		return $new_columns;
 	}

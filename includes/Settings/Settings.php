@@ -42,7 +42,7 @@ class Settings {
 	 */
 	public static function get_defaults(): array {
 		return [
-			'company_code'             => 'GPH01',
+			'company_code'             => '',
 			'currency_symbol'          => 'BDT',
 			'currency_position'        => 'right', // 'left' or 'right'
 			'cache_ttl_info'           => 1800, // 30 mins
@@ -55,7 +55,7 @@ class Settings {
 			'pay_at_hotel_enabled'     => true,
 			'pay_at_hotel_title'       => 'Pay at Hotel / Reception Desk',
 			'pay_at_hotel_desc'        => 'Reserve your room now and pay directly at the hotel front desk during check-in.',
-			'cancellation_policy_text' => 'Free cancellation up to 48 hours before check-in. Cancellations within 48 hours are subject to a 100% first night charge.',
+			'cancellation_policy_text' => '',
 			'auto_sync_interval'       => 'daily',
 		];
 	}
@@ -161,7 +161,7 @@ class Settings {
 			? absint( $input['default_children'] )
 			: $defaults['default_children'];
 
-		$clean['room_gateways'] = ! empty( $input['room_gateways'] ) && is_array( $input['room_gateways'] )
+		$clean['room_gateways'] = isset( $input['room_gateways'] ) && is_array( $input['room_gateways'] )
 			? array_map( 'sanitize_key', $input['room_gateways'] )
 			: $defaults['room_gateways'];
 
@@ -175,7 +175,7 @@ class Settings {
 			? sanitize_textarea_field( trim( $input['pay_at_hotel_desc'] ) )
 			: $defaults['pay_at_hotel_desc'];
 
-		$clean['cancellation_policy_text'] = ! empty( $input['cancellation_policy_text'] )
+		$clean['cancellation_policy_text'] = isset( $input['cancellation_policy_text'] )
 			? sanitize_textarea_field( $input['cancellation_policy_text'] )
 			: $defaults['cancellation_policy_text'];
 
@@ -210,13 +210,17 @@ class Settings {
 	 * @return array
 	 */
 	public static function get_hotel_info( bool $refresh = false ): array {
+		static $profiles = [];
 		$company_code = self::get( 'company_code' );
+		if ( ! $refresh && isset( $profiles[ $company_code ] ) ) {
+			return $profiles[ $company_code ];
+		}
 		$transient    = 'arc_hotel_info_' . md5( $company_code );
 
 		if ( ! $refresh ) {
 			$cached = get_transient( $transient );
 			if ( is_array( $cached ) && ! empty( $cached ) ) {
-				return $cached;
+				return $profiles[ $company_code ] = $cached;
 			}
 		}
 
@@ -228,6 +232,7 @@ class Settings {
 		);
 
 		$info = [
+			'_verified'            => false,
 			'hotelName'            => 'Hotel & Resort',
 			'companyCode'          => $company_code,
 			'phone'                => '',
@@ -241,6 +246,7 @@ class Settings {
 		if ( $res->ok() && is_array( $res->data() ) ) {
 			$data = $res->data();
 			$info = [
+				'_verified'            => true,
 				'hotelName'            => sanitize_text_field( $data['hotelName'] ?? 'Hotel & Resort' ),
 				'companyCode'          => sanitize_text_field( $data['companyCode'] ?? $company_code ),
 				'phone'                => sanitize_text_field( $data['phone'] ?? '' ),
@@ -253,7 +259,18 @@ class Settings {
 			set_transient( $transient, $info, self::get( 'cache_ttl_info', 1800 ) );
 		}
 
-		return $info;
+		return $profiles[ $company_code ] = $info;
+	}
+
+	/** Use the same API-configured hotel times for search, checkout and reservation. */
+	public static function stay_datetime( string $date, bool $check_in ): string {
+		$info = self::get_hotel_info();
+		$time = (string) ( $info[ $check_in ? 'standardCheckInTime' : 'standardCheckOutTime' ] ?? '' );
+		if ( ! preg_match( '/^(\d{2}):(\d{2})(?::(\d{2}))?$/', $time, $parts )
+			|| (int) $parts[1] > 23 || (int) $parts[2] > 59 || ( isset( $parts[3] ) && (int) $parts[3] > 59 ) ) {
+			$time = $check_in ? '14:00' : '12:00';
+		}
+		return $date . 'T' . substr( $time, 0, 5 ) . ':00';
 	}
 
 	/**

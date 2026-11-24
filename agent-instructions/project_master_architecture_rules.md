@@ -1,5 +1,9 @@
 # Project Master Note: Aristocrats (Hotel Booking & Restaurant E-Commerce System)
 
+## Website Brand Design Reference
+
+Follow the user-approved logo palette and accessible color roles in [Website Brand Colors](../instructions.md#website-brand-colors): Navy `#082465`, Teal `#0A74A6`, Cyan `#1B9EC2`, Orange `#F48C06`, Hover Orange `#D97706`, and Light Tint `#F0F8FB`. The shared CSS properties in `assets/css/hotel-core.css` are the default source for plugin styling. Primary Orange buttons use Navy text; Cyan is reserved for accents on light surfaces.
+
 ## 1. Core Project Overview & Tech Stack
 * **Project Name:** Aristocrats
 * **Platform & Builder:** WordPress, Elementor Pro

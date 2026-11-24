@@ -1,0 +1,298 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aristocrats Room Card - Illustrative Preview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap">
+<style>html{background:#f5f5ef}body{margin:0;color:#17332b;font-family:Inter,Arial,sans-serif}.preview-shell{max-width:1176px;margin:0 auto;padding:48px 32px}.preview-kicker{margin:0 0 10px;font-size:11px;letter-spacing:2px;color:#806237}.preview-heading{margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600}.preview-note{max-width:680px;margin:12px 0 28px;color:#697167;font-size:12px;line-height:1.6}.preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch}.elementor-icon-list-items{list-style:none}.elementor-icon-list-item{display:flex;align-items:center}.arc-card-eyebrow .elementor-heading-title{font-weight:600}.arc-card-capacity{margin-top:2px}.arc-card-footer{margin-top:auto}.arc-card-amenities{margin-bottom:6px}@media(max-width:1024px){.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}@media(max-width:767px){.preview-shell{padding:26px 18px}.preview-heading{font-size:29px}.preview-grid{grid-template-columns:1fr;gap:18px}.preview-note{font-size:11px}.arc-room-editorial:not(:first-child){display:none}}
+/* Room data comes from the current arc_room loop post. */
+.arc-room-editorial {
+  box-sizing: border-box;
+  --arc-card-green: #17332b;
+  --arc-card-gold: #c19d60;
+  --arc-card-ink: #1f1f1f;
+  --arc-card-muted: #656a65;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #e5e7e0;
+  border-radius: 0 !important;
+  background: #ffffff;
+  box-shadow: 0 5px 20px rgba(23, 51, 43, .035);
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+.arc-room-editorial:hover {
+  border-color: var(--arc-card-gold);
+  box-shadow: 0 12px 32px rgba(23, 51, 43, .09);
+}
+.arc-room-editorial *, .arc-room-editorial *::before, .arc-room-editorial *::after {
+  box-sizing: border-box;
+  border-radius: 0 !important;
+}
+.arc-room-editorial .elementor-widget { margin-bottom: 0; min-width: 0; }
+.arc-room-editorial .elementor-widget-container { margin: 0; }
+/* Legacy Section/Column wrappers; no Elementor Container element is needed. */
+.arc-room-editorial > .elementor-container {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+}
+.arc-room-editorial .arc-card-shell {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+.arc-room-editorial .arc-card-shell > .elementor-widget-wrap {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  gap: 0;
+}
+.arc-room-editorial .arc-card-image { width: 100%; flex-shrink: 0; overflow: hidden; }
+.arc-room-editorial .arc-card-image .elementor-widget-container,
+.arc-room-editorial .arc-card-image a { display: block; overflow: hidden; }
+.arc-room-editorial .arc-card-image img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .65s cubic-bezier(.2, .65, .3, 1);
+}
+.arc-room-editorial:hover .arc-card-image img { transform: scale(1.035); }
+.arc-room-editorial .arc-card-body {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 23px 23px 12px;
+}
+.arc-room-editorial .arc-card-body > .elementor-container {
+  display: flex;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+.arc-room-editorial .arc-card-content { width: 100%; min-width: 0; }
+.arc-room-editorial .arc-card-content > .elementor-widget-wrap {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: stretch;
+  padding: 0;
+  gap: 12px;
+}
+.arc-room-editorial .arc-card-eyebrow .elementor-heading-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #806237;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+.arc-room-editorial .arc-card-eyebrow .elementor-heading-title::before {
+  content: '';
+  display: block;
+  width: 23px;
+  height: 1px;
+  flex-shrink: 0;
+  background: var(--arc-card-gold);
+}
+.arc-room-editorial .arc-card-title .elementor-heading-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: var(--arc-card-green);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -.45px;
+}
+.arc-room-editorial .arc-card-title a { color: inherit; text-decoration: none; }
+.arc-room-editorial .arc-card-title a:hover { color: #806237; }
+.arc-room-editorial .arc-card-description .elementor-heading-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  color: var(--arc-card-muted);
+  font-family: Inter, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+.arc-room-editorial .arc-card-description:has(.elementor-heading-title:empty) { display: none; }
+.arc-room-editorial .arc-card-capacity .elementor-icon-list-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+}
+.arc-room-editorial .arc-card-capacity .elementor-icon-list-item { margin: 0; padding: 0; }
+.arc-room-editorial .arc-card-capacity .elementor-icon-list-text {
+  color: #4e5952;
+  padding-inline-start: 7px;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+.arc-room-editorial .arc-card-capacity .elementor-icon-list-icon {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  color: #806237;
+}
+.arc-room-editorial .arc-card-capacity .elementor-icon-list-icon i { color: #806237; font-size: 12px; }
+.arc-room-editorial .arc-card-capacity .elementor-icon-list-icon svg { fill: #806237; width: 12px; height: 12px; }
+.arc-room-editorial .arc-card-amenities .arc-room-amenities-section { margin: 0; padding: 0; }
+.arc-room-editorial .arc-card-amenities .arc-amenities-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.arc-room-editorial .arc-card-amenities .arc-amenities-grid li {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid #e9ebe4;
+  background: #f8f8f4;
+  color: #586057;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.arc-room-editorial .arc-card-amenities .arc-amenities-grid li:nth-child(n+4) { display: none; }
+.arc-room-editorial .arc-card-amenities:has(.elementor-shortcode:empty) { display: none; }
+.arc-room-editorial .arc-card-footer {
+  display: block;
+  width: calc(100% - 46px);
+  margin: auto 23px 23px;
+  padding: 19px 0 0;
+  border-top: 1px solid #e8eae3;
+}
+.arc-room-editorial .arc-card-footer > .elementor-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  max-width: none;
+  margin: 0;
+}
+.arc-room-editorial .arc-card-price-column, .arc-room-editorial .arc-card-cta-column {
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+.arc-room-editorial .arc-card-footer .elementor-widget-wrap {
+  display: block;
+  width: 100%;
+  padding: 0;
+}
+.arc-room-editorial .arc-card-price, .arc-room-editorial .arc-card-cta { width: auto; max-width: 100%; }
+.arc-room-editorial .arc-card-price .arc-room-meta-pills { display: block; margin: 0; padding: 0; }
+.arc-room-editorial .arc-card-price .arc-pill:not(.arc-pill-price) { display: none; }
+.arc-room-editorial .arc-card-price .arc-pill-price {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--arc-card-muted);
+  font-family: Inter, Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.arc-room-editorial .arc-card-price .arc-pill-price strong {
+  color: var(--arc-card-green);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.6px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.arc-room-editorial .arc-card-cta .elementor-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 13px 15px;
+  border: 1px solid var(--arc-card-green);
+  border-radius: 0 !important;
+  background: var(--arc-card-green);
+  color: #ffffff;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .2px;
+  text-decoration: none;
+  box-shadow: none;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.arc-room-editorial .arc-card-cta .elementor-button-content-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 10px;
+}
+.arc-room-editorial .arc-card-cta .elementor-button-icon { display: inline-flex; margin: 0; }
+.arc-room-editorial .arc-card-cta .elementor-button-icon svg { width: 12px; height: 12px; fill: currentColor; }
+.arc-room-editorial .arc-card-cta .elementor-button:hover,
+.arc-room-editorial .arc-card-cta .elementor-button:focus-visible {
+  border-color: var(--arc-card-gold);
+  background: var(--arc-card-gold);
+  color: var(--arc-card-green);
+}
+.arc-room-editorial a:focus-visible { outline: 2px solid #806237; outline-offset: -3px; }
+.arc-room-editorial .arc-card-cta a:focus-visible { outline: 2px solid #17332b; outline-offset: 3px; }
+@media (max-width: 767px) {
+  .arc-room-editorial .arc-card-body { padding: 19px 19px 11px; }
+  .arc-room-editorial .arc-card-content > .elementor-widget-wrap { gap: 11px; }
+  .arc-room-editorial .arc-card-title .elementor-heading-title { font-size: 24px; }
+  .arc-room-editorial .arc-card-footer { width: calc(100% - 38px); margin: auto 19px 19px; padding-top: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arc-room-editorial, .arc-room-editorial .arc-card-image img, .arc-room-editorial .elementor-button { transition: none; }
+  .arc-room-editorial:hover .arc-card-image img { transform: none; }
+}
+</style></head><body><main class="preview-shell"><p class="preview-kicker">ARISTOCRATS INN</p><h1 class="preview-heading">A considered stay.</h1><p class="preview-note">Illustrative design preview. Photos, names, rates and amenities here are sample content. Imported Elementor templates use each room's actual dynamic data.</p><div class="preview-grid"><article class="elementor-section arc-room-editorial"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-shell"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-image"><div class="elementor-widget-container"><a href="#preview"><img src="room-preview.webp" alt="Illustrative room photograph"></a></div></div><section class="elementor-section elementor-inner-section arc-card-body"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-content"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-eyebrow"><div class="elementor-widget-container"><span class="elementor-heading-title">ROOMS &amp; SUITES</span></div></div><div class="elementor-widget arc-card-title"><div class="elementor-widget-container"><h3 class="elementor-heading-title"><a href="#preview">Deluxe King Room</a></h3></div></div><div class="elementor-widget arc-card-description"><div class="elementor-widget-container"><div class="elementor-heading-title">A calm, comfortable retreat with thoughtfully arranged interiors and space to unwind.</div></div></div><div class="elementor-widget arc-card-capacity"><div class="elementor-widget-container"><ul class="elementor-icon-list-items"><li class="elementor-icon-list-item"><span class="elementor-icon-list-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5z"/></svg></span><span class="elementor-icon-list-text">2 Adults</span></li><li class="elementor-icon-list-item"><span class="elementor-icon-list-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-3 7-5 4 1.5 2L9 12.3V17l-2 5h3l2-4 2 4h3l-2-5v-4.7l3.5 2.7L20 13l-5-4H9z"/></svg></span><span class="elementor-icon-list-text">1 Children</span></li></ul></div></div><div class="elementor-widget arc-card-amenities"><div class="elementor-widget-container"><div class="elementor-shortcode"><div class="arc-room-amenities-section"><ul class="arc-amenities-grid"><li>&#10004; Wi-Fi</li><li>&#10004; Air Conditioning</li><li>&#10004; Television</li><li>&#10004; Extra amenity</li></ul></div></div></div></div></div></div></div></section><section class="elementor-section elementor-inner-section arc-card-footer"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-price-column"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-price"><div class="elementor-widget-container"><div class="elementor-shortcode"><div class="arc-room-meta-pills"><span class="arc-pill">2 Adults</span><span class="arc-pill arc-pill-price">From <strong>4,500 BDT</strong> /night</span></div></div></div></div></div></div><div class="elementor-column arc-card-cta-column"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-cta"><div class="elementor-widget-container"><a class="elementor-button" href="#preview"><span class="elementor-button-content-wrapper"><span class="elementor-button-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 4-1.4 1.4 5.6 5.6H3v2h14.2l-5.6 5.6L13 20l8-8z"/></svg></span><span class="elementor-button-text">View Room</span></span></a></div></div></div></div></div></section></div></div></div></article><article class="elementor-section arc-room-editorial"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-shell"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-image"><div class="elementor-widget-container"><a href="#preview"><img src="room-preview.webp" alt="Illustrative room photograph"></a></div></div><section class="elementor-section elementor-inner-section arc-card-body"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-content"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-eyebrow"><div class="elementor-widget-container"><span class="elementor-heading-title">ROOMS &amp; SUITES</span></div></div><div class="elementor-widget arc-card-title"><div class="elementor-widget-container"><h3 class="elementor-heading-title"><a href="#preview">Executive Suite</a></h3></div></div><div class="elementor-widget arc-card-description"><div class="elementor-widget-container"><div class="elementor-heading-title">Room to slow down, with generous interiors and a welcoming atmosphere.</div></div></div><div class="elementor-widget arc-card-capacity"><div class="elementor-widget-container"><ul class="elementor-icon-list-items"><li class="elementor-icon-list-item"><span class="elementor-icon-list-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5z"/></svg></span><span class="elementor-icon-list-text">3 Adults</span></li><li class="elementor-icon-list-item"><span class="elementor-icon-list-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-3 7-5 4 1.5 2L9 12.3V17l-2 5h3l2-4 2 4h3l-2-5v-4.7l3.5 2.7L20 13l-5-4H9z"/></svg></span><span class="elementor-icon-list-text">2 Children</span></li></ul></div></div><div class="elementor-widget arc-card-amenities"><div class="elementor-widget-container"><div class="elementor-shortcode"><div class="arc-room-amenities-section"><ul class="arc-amenities-grid"><li>&#10004; Wi-Fi</li><li>&#10004; Air Conditioning</li><li>&#10004; Room Service</li></ul></div></div></div></div></div></div></div></section><section class="elementor-section elementor-inner-section arc-card-footer"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-price-column"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-price"><div class="elementor-widget-container"><div class="elementor-shortcode"><div class="arc-room-meta-pills"><span class="arc-pill">2 Adults</span><span class="arc-pill arc-pill-price">From <strong>7,500 BDT</strong> /night</span></div></div></div></div></div></div><div class="elementor-column arc-card-cta-column"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-cta"><div class="elementor-widget-container"><a class="elementor-button" href="#preview"><span class="elementor-button-content-wrapper"><span class="elementor-button-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 4-1.4 1.4 5.6 5.6H3v2h14.2l-5.6 5.6L13 20l8-8z"/></svg></span><span class="elementor-button-text">View Room</span></span></a></div></div></div></div></div></section></div></div></div></article><article class="elementor-section arc-room-editorial"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-shell"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-image"><div class="elementor-widget-container"><a href="#preview"><img src="room-preview.webp" alt="Illustrative room photograph"></a></div></div><section class="elementor-section elementor-inner-section arc-card-body"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-content"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-eyebrow"><div class="elementor-widget-container"><span class="elementor-heading-title">ROOMS &amp; SUITES</span></div></div><div class="elementor-widget arc-card-title"><div class="elementor-widget-container"><h3 class="elementor-heading-title"><a href="#preview">Standard Twin Room</a></h3></div></div><div class="elementor-widget arc-card-description"><div class="elementor-widget-container"><div class="elementor-heading-title">Thoughtful essentials for a relaxing stay.</div></div></div><div class="elementor-widget arc-card-capacity"><div class="elementor-widget-container"><ul class="elementor-icon-list-items"><li class="elementor-icon-list-item"><span class="elementor-icon-list-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5z"/></svg></span><span class="elementor-icon-list-text">2 Adults</span></li><li class="elementor-icon-list-item"><span class="elementor-icon-list-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-3 7-5 4 1.5 2L9 12.3V17l-2 5h3l2-4 2 4h3l-2-5v-4.7l3.5 2.7L20 13l-5-4H9z"/></svg></span><span class="elementor-icon-list-text">0 Children</span></li></ul></div></div><div class="elementor-widget arc-card-amenities"><div class="elementor-widget-container"><div class="elementor-shortcode"><div class="arc-room-amenities-section"><ul class="arc-amenities-grid"><li>&#10004; Wi-Fi</li><li>&#10004; Television</li></ul></div></div></div></div></div></div></div></section><section class="elementor-section elementor-inner-section arc-card-footer"><div class="elementor-container elementor-column-gap-no"><div class="elementor-column arc-card-price-column"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-price"><div class="elementor-widget-container"><div class="elementor-shortcode"><div class="arc-room-meta-pills"><span class="arc-pill">2 Adults</span><span class="arc-pill arc-pill-price">From <strong>3,500 BDT</strong> /night</span></div></div></div></div></div></div><div class="elementor-column arc-card-cta-column"><div class="elementor-widget-wrap elementor-element-populated"><div class="elementor-widget arc-card-cta"><div class="elementor-widget-container"><a class="elementor-button" href="#preview"><span class="elementor-button-content-wrapper"><span class="elementor-button-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 4-1.4 1.4 5.6 5.6H3v2h14.2l-5.6 5.6L13 20l8-8z"/></svg></span><span class="elementor-button-text">View Room</span></span></a></div></div></div></div></div></section></div></div></div></article></div></main></body></html>

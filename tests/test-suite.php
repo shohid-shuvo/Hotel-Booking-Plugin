@@ -325,7 +325,7 @@ class ArcTestSuite {
 
 		// Default tenant code
 		$default_code = \ARC\HotelCore\Settings\Settings::get( 'company_code' );
-		$this->assert( ! empty( $default_code ), 'Default company_code is accessible' );
+		$this->assert( $default_code === '', 'An unconfigured install has no default tenant' );
 
 		// Dynamic update to a different client tenant code (e.g. SGL02 for Seagull Resort)
 		\ARC\HotelCore\Settings\Settings::update( [ 'company_code' => 'SGL02' ] );

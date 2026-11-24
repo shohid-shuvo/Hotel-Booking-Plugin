@@ -10,7 +10,7 @@
 namespace ARC\HotelCore\Cache;
 
 use ARC\HotelCore\Cart\Cart_Guard;
-use ARC\HotelCore\Api\Api_Client;
+use ARC\HotelCore\Booking\Room_Quote;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -180,25 +180,21 @@ class Cache_Safety {
 			$check_out = $tomorrow;
 		}
 
-		$client = new Api_Client();
-		$api_res = $client->get(
-			'api/v1/public-booking/available-rooms',
-			[
-				'checkIn'    => $check_in . 'T14:00:00',
-				'checkOut'   => $check_out . 'T12:00:00',
-				'roomTypeId' => $room_type_id ?: null,
-				'adults'     => $adults,
-			],
-			[ 'use_cache' => false ]
-		);
+		$children = (int) ( $request->get_param( 'children' ) ?? 0 );
+		$api_res = Room_Quote::search( $check_in, $check_out, $adults, $children, $room_type_id );
 
+		if ( ! $api_res->ok() ) {
+			$response = new \WP_REST_Response( [ 'error'=>$api_res->message() ], 'INVALID_DATES' === $api_res->error_code() ? 400 : 503 );
+			$response->header( 'Cache-Control','no-store' );
+			return $response;
+		}
 		$response_data = [
 			'available'     => false,
 			'roomsCount'    => 0,
 			'pricePerNight' => 0.0,
 			'totalPrice'    => 0.0,
 			'nights'        => 1,
-			'currency'      => 'BDT',
+			'currency'      => \ARC\HotelCore\Settings\Settings::get( 'currency_symbol', 'BDT' ),
 		];
 
 		if ( $api_res->ok() ) {
@@ -237,8 +233,9 @@ class Cache_Safety {
 	 */
 	public function rest_get_fresh_nonces(): \WP_REST_Response {
 		$data = [
-			'book_nonce'  => wp_create_nonce( 'arc_add_room_to_cart' ),
+			'book_nonce'  => wp_create_nonce( 'arc_book_room' ),
 			'track_nonce' => wp_create_nonce( 'arc_track_booking_action' ),
+			'cancel_nonce' => wp_create_nonce( 'arc_cancel_booking_action' ),
 		];
 
 		$response = new \WP_REST_Response( $data, 200 );

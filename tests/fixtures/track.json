@@ -5,6 +5,7 @@
   "data": [
     {
       "bookingId": 1001,
+      "companyCode": "GPH01",
       "bookingNumber": "WEB-20261101-7891",
       "status": "Reserved",
       "guestName": "Shohidul Islam",

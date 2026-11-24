@@ -1,6 +1,6 @@
 <?php
 /**
- * API Diagnostic Log Viewer Page.
+ * System Sync Diagnostic Log Viewer Page.
  *
  * @package ARC\HotelCore\Admin
  */
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Renders the 30-day API Log viewer in WooCommerce Admin.
+ * Renders the Diagnostic Log viewer in WooCommerce Admin (restricted to developers).
  */
 class Log_Page {
 
@@ -28,15 +28,26 @@ class Log_Page {
 	}
 
 	/**
-	 * Register submenu under WooCommerce.
+	 * Register submenu under Hotel Management (strictly hidden from clients by default).
 	 *
 	 * @return void
 	 */
 	public function register_menu(): void {
+		// Strictly hide Diagnostic / API Logs from client view by default.
+		// Only display when explicitly enabled for developers via constant or filter.
+		$show_logs = apply_filters(
+			'arc_show_diagnostic_logs',
+			( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'ARC_DEV_MODE' ) && ARC_DEV_MODE )
+		);
+
+		if ( ! $show_logs ) {
+			return;
+		}
+
 		add_submenu_page(
 			'edit.php?post_type=' . \ARC\HotelCore\Rooms\Room_Post_Type::POST_TYPE,
-			__( 'Hotel API Logs', 'arc-hotel-core' ),
-			__( 'API Logs', 'arc-hotel-core' ),
+			__( 'System Sync Logs', 'arc-hotel-core' ),
+			__( 'Sync Logs', 'arc-hotel-core' ),
 			'manage_woocommerce',
 			'arc-api-logs',
 			[ $this, 'render' ]
@@ -44,13 +55,18 @@ class Log_Page {
 	}
 
 	/**
-	 * Render log viewer HTML.
+	 * Render log viewer HTML with complete endpoint masking.
 	 *
 	 * @return void
 	 */
 	public function render(): void {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			return;
+		$show_logs = apply_filters(
+			'arc_show_diagnostic_logs',
+			( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'ARC_DEV_MODE' ) && ARC_DEV_MODE )
+		);
+
+		if ( ! $show_logs || ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this diagnostic page.', 'arc-hotel-core' ) );
 		}
 
 		global $wpdb;
@@ -60,6 +76,8 @@ class Log_Page {
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
 		if ( ! $table_exists ) {
 			Api_Logger::install_table();
+		} else {
+			Api_Logger::migrate_legacy_logs();
 		}
 
 		$page     = max( 1, isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1 );
@@ -78,9 +96,9 @@ class Log_Page {
 		$total_pages = ceil( $total / $per_page );
 		?>
 		<div class="wrap arc-logs-wrap">
-			<h1><?php esc_html_e( 'Smart Hotel Management API — 30-Day Diagnostic Logs', 'arc-hotel-core' ); ?></h1>
+			<h1><?php esc_html_e( 'Hotel Management — System Synchronization Logs', 'arc-hotel-core' ); ?></h1>
 			<p class="description">
-				<?php esc_html_e( 'Review outbound and inbound API requests. All sensitive data (NID, passwords, phone, email) is automatically redacted at write time.', 'arc-hotel-core' ); ?>
+				<?php esc_html_e( 'Review background synchronization status. Proprietary architecture and sensitive credentials are automatically protected.', 'arc-hotel-core' ); ?>
 			</p>
 
 			<table class="wp-list-table widefat fixed striped" style="margin-top: 15px;">
@@ -89,18 +107,18 @@ class Log_Page {
 						<th style="width: 60px;"><?php esc_html_e( 'ID', 'arc-hotel-core' ); ?></th>
 						<th style="width: 150px;"><?php esc_html_e( 'Timestamp (UTC)', 'arc-hotel-core' ); ?></th>
 						<th style="width: 80px;"><?php esc_html_e( 'Method', 'arc-hotel-core' ); ?></th>
-						<th><?php esc_html_e( 'Endpoint', 'arc-hotel-core' ); ?></th>
+						<th style="width: 220px;"><?php esc_html_e( 'Operation', 'arc-hotel-core' ); ?></th>
 						<th style="width: 90px;"><?php esc_html_e( 'Status', 'arc-hotel-core' ); ?></th>
 						<th style="width: 90px;"><?php esc_html_e( 'Duration', 'arc-hotel-core' ); ?></th>
 						<th style="width: 180px;"><?php esc_html_e( 'Correlation ID', 'arc-hotel-core' ); ?></th>
-						<th><?php esc_html_e( 'Error Message', 'arc-hotel-core' ); ?></th>
+						<th><?php esc_html_e( 'Status Message', 'arc-hotel-core' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if ( empty( $logs ) ) : ?>
 						<tr>
 							<td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">
-								<?php esc_html_e( 'No API requests logged yet.', 'arc-hotel-core' ); ?>
+								<?php esc_html_e( 'No synchronization events recorded yet.', 'arc-hotel-core' ); ?>
 							</td>
 						</tr>
 					<?php else : ?>
@@ -108,12 +126,17 @@ class Log_Page {
 							$is_ok    = ! empty( $row->succeeded );
 							$status_bg = $is_ok ? '#e8f5e9' : '#ffebee';
 							$status_co = $is_ok ? '#2e7d32' : '#c62828';
+							$op_label  = Api_Logger::get_operation_name( (string) $row->endpoint );
 							?>
 							<tr>
 								<td><?php echo esc_html( $row->id ); ?></td>
 								<td><?php echo esc_html( $row->created_at ); ?></td>
 								<td><strong><?php echo esc_html( $row->method ); ?></strong></td>
-								<td><code><?php echo esc_html( $row->endpoint ); ?></code></td>
+								<td>
+									<span style="display: inline-block; padding: 3px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; background: #f1f5f9; color: #1e3a8a; border: 1px solid #cbd5e1;">
+										<?php echo esc_html( $op_label ); ?>
+									</span>
+								</td>
 								<td>
 									<span style="display: inline-block; padding: 2px 6px; border-radius: 3px; font-weight: bold; background: <?php echo esc_attr( $status_bg ); ?>; color: <?php echo esc_attr( $status_co ); ?>;">
 										<?php echo esc_html( $row->http_status ); ?>

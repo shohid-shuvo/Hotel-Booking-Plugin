@@ -47,7 +47,7 @@ class Gateway_Filter {
 	 * @return array
 	 */
 	public function filter_gateways( array $available_gateways ): array {
-		if ( is_admin() ) {
+		if ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return $available_gateways;
 		}
 

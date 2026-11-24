@@ -59,7 +59,7 @@ class Room_Sync {
 			'api/v1/public-booking/room-categories',
 			[ 'companyCode' => $company_code ],
 			[
-				'use_cache' => false,
+				'use_cache' => true,
 				'cache_ttl' => Settings::get( 'cache_ttl_rooms', 600 ),
 			]
 		);
@@ -174,11 +174,7 @@ class Room_Sync {
 				wp_update_post( $post_data );
 				$updated++;
 			} else {
-				$default_desc = ! empty( $desc ) ? $desc : sprintf(
-					/* translators: %s: Room category name */
-					__( 'Experience luxury and comfort in our %s. Configured with modern furnishings, top hospitality amenities, and 24/7 room service.', 'arc-hotel-core' ),
-					$name
-				);
+				$default_desc = $desc;
 
 				$post_id = wp_insert_post( [
 					'post_type'    => Room_Post_Type::POST_TYPE,
@@ -251,7 +247,7 @@ class Room_Sync {
 		Settings::get_hotel_info( true );
 
 		// Refresh rewrite rules to guarantee that room URLs never 404
-		flush_rewrite_rules( false );
+		if ( $created > 0 || $drafted > 0 ) { flush_rewrite_rules( false ); }
 
 		return [
 			'success'      => true,
@@ -282,7 +278,11 @@ class Room_Sync {
 		}
 
 		$company_code = isset( $_POST['company_code'] ) ? sanitize_text_field( wp_unslash( $_POST['company_code'] ) ) : '';
-		$stats        = self::sync_all( $company_code );
+		if ( $company_code && $company_code !== Settings::get( 'company_code' ) ) {
+			wp_send_json_error( [ 'message'=>__( 'Save the Company Code before synchronizing that hotel.', 'arc-hotel-core' ) ] );
+		}
+		\ARC\HotelCore\Api\Api_Cache::flush();
+		$stats = self::sync_all();
 
 		if ( $stats['success'] ) {
 			wp_send_json_success( $stats );

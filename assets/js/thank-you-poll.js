@@ -23,7 +23,7 @@
 				clearInterval(timer);
 				$('#arc-sync-pending-wrap').html(
 					'<p style="color: #b45309; font-weight: 600;">' +
-					'Your reservation is being processed by our front office. You will receive an official confirmation email shortly.' +
+					'Your reservation is being processed by our front office. Please contact the hotel with your order number if confirmation is delayed.' +
 					'</p>'
 				);
 				return;
@@ -32,8 +32,14 @@
 			$.post(ajaxUrl, {
 				action: 'arc_poll_booking_status',
 				order_id: orderId,
-				nonce: nonce
+				nonce: nonce,
+				order_key: window.arcThankYouData.orderKey
 			}, function(res) {
+				if (res.success && res.data && res.data.terminal) {
+					clearInterval(timer);
+					$('#arc-sync-pending-wrap').empty().append($('<p>').text(res.data.message));
+					return;
+				}
 				if (res.success && res.data && res.data.synced) {
 					clearInterval(timer);
 					window.location.reload();
